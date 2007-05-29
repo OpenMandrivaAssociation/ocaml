@@ -4,10 +4,10 @@
 %endif
 %define build_labltk	1
 %define name	ocaml
-%define major	3.09
-%define minor	3
+%define major	3.10
+%define minor	0
 %define version	%{major}.%{minor}
-%define release	%mkrel 5
+%define release	%mkrel 1
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -27,6 +27,7 @@ Patch3:		ocaml-3.00-ocamltags--no-site-start.patch
 Patch6:		ocaml-3.04-do-not-add-rpath-X11R6_lib-when-using-option-L.patch
 Patch7:		ocaml-3.05-no-opt-for-debug-and-profile.patch
 Patch8:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
+Patch9:		ocaml-3.10.0-handle-tk-8.5.patch
 Patch16:	ocaml-3.09.2-lib64.patch
 Patch17:	ocaml-3.09.2-db4.patch
 Patch18:	ocaml-3.09.3-compile-emacs-files-in-build-dir.patch
@@ -86,6 +87,7 @@ Tk toolkit binding for OCaml
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 %patch16 -p1 -b .lib64
 %patch17 -p1 -b .db4
 %patch18 -p1 -b .emacs
@@ -153,8 +155,7 @@ rm -rf %{buildroot}
 %files -f %{name}.list
 %defattr(-,root,root)
 %doc Changes LICENSE README
-%{_mandir}/man*/*ocaml*
-%{_mandir}/man*/ocpp*
+%{_mandir}/man1/*
 #%{_menudir}/*
 %{_datadir}/emacs/site-lisp/*
 %{_libdir}/ocaml/site-lib
@@ -165,7 +166,7 @@ rm -rf %{buildroot}
 %files doc
 %defattr(-,root,root)
 %doc htmlman/* 
-%{_mandir}/man*/*.3o.*
+%{_mandir}/man3/*
 
 %if %{build_labltk}
 %files labltk
@@ -181,7 +182,6 @@ rm -rf %{buildroot}
 
 %files -n camlp4
 %defattr(-,root,root)
-%{_mandir}/man*/*camlp4*
 %{_bindir}/*camlp4*
 %{_libdir}/ocaml/camlp4
 %{_libdir}/ocaml/site-lib/camlp4
