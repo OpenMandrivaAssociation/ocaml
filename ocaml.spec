@@ -7,7 +7,7 @@
 %define major	3.10
 %define minor	0
 %define version	%{major}.%{minor}
-%define release	%mkrel 1
+%define release	%mkrel 2
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -62,6 +62,10 @@ Requires:	%{name} = %{version}
 Requires:	tk-devel
 Obsoletes:  ocamltk
 
+%package sources
+Summary:	OCaml sources
+Group:		Development/Other
+
 %description
 Objective Caml is a high-level, strongly-typed, functional and object-oriented
 programming language from the ML family of languages.
@@ -78,6 +82,9 @@ Preprocessor for OCaml
 
 %description labltk
 Tk toolkit binding for OCaml
+
+%description sources
+OCaml sources
 
 %prep
 %setup -q -T -b 0
@@ -149,6 +156,11 @@ cp -pr site-lib %{buildroot}%{_libdir}/ocaml/
 # ensure dynamic libraries from site-lie availability
 echo '%{_libdir}/ocaml/site-lib/stublibs' >> %{buildroot}%{_libdir}/ocaml/ld.conf
 
+# install sources
+install -d -m 755 %{buildroot}%{_prefix}/src
+tar xvjf %{SOURCE0} -C %{buildroot}%{_prefix}/src
+mv %{buildroot}%{_prefix}/src/%{name}-%{version} %{buildroot}%{_prefix}/src/%{name}
+
 %clean
 rm -rf %{buildroot}
 
@@ -186,4 +198,6 @@ rm -rf %{buildroot}
 %{_libdir}/ocaml/camlp4
 %{_libdir}/ocaml/site-lib/camlp4
 
-
+%files sources
+%defattr(-,root,root)
+%{_prefix}/src/%{name}
