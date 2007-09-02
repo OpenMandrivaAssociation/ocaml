@@ -7,7 +7,7 @@
 %define major	3.10
 %define minor	0
 %define version	%{major}.%{minor}
-%define release	%mkrel 2
+%define release	%mkrel 3
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -65,6 +65,8 @@ Obsoletes:  ocamltk
 %package sources
 Summary:	OCaml sources
 Group:		Development/Other
+# don't add crazy deps
+AutoReqProv: No
 
 %description
 Objective Caml is a high-level, strongly-typed, functional and object-oriented
