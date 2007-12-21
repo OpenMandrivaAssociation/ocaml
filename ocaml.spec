@@ -41,6 +41,7 @@ BuildRequires:	tk-devel
 BuildRequires:	emacs-bin
 BuildRequires:	db4-devel
 
+BuildRoot:	%{_tmppath}/%{name}-%{version}
 Obsoletes:	ocaml-emacs
 Provides:	ocaml-emacs
 
