@@ -5,9 +5,9 @@
 %define build_labltk	1
 %define name	ocaml
 %define major	3.10
-%define minor	0
+%define minor	2
 %define version	%{major}.%{minor}
-%define release	%mkrel 5
+%define release	%mkrel 1
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
