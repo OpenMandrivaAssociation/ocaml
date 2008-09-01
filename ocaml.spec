@@ -7,7 +7,7 @@
 %define major	3.10
 %define minor	2
 %define version	%{major}.%{minor}
-%define release	%mkrel 2
+%define release	%mkrel 3
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -119,8 +119,8 @@ rm -rf %{buildroot}
 make install BINDIR=%{buildroot}%{_bindir} LIBDIR=%{buildroot}%{_libdir}/ocaml MANDIR=%{buildroot}%{_mandir}
 
 # remove stupid camlp4o.opt which can't work
-rm -f %{buildroot}%{_bindir}/camlp4*.opt
-rm -f %{buildroot}%{_mandir}/man1/camlp4*.opt.*
+#rm -f %{buildroot}%{_bindir}/camlp4*.opt
+#rm -f %{buildroot}%{_mandir}/man1/camlp4*.opt.*
 
 cd emacs; make install install-ocamltags BINDIR=%{buildroot}%{_bindir} EMACSDIR=%{buildroot}%{_datadir}/emacs/site-lisp; cd -
 
