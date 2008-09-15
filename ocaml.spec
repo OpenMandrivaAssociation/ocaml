@@ -7,7 +7,7 @@
 %define major	3.10
 %define minor	2
 %define version	%{major}.%{minor}
-%define release	%mkrel 3
+%define release	%mkrel 4
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -128,11 +128,11 @@ cd emacs; make install install-ocamltags BINDIR=%{buildroot}%{_bindir} EMACSDIR=
 perl -pi -e "s|%{buildroot}||" %{buildroot}%{_libdir}/ocaml/ld.conf
 
 %if %{build_ocamlopt}
-# only keep the binary versions (which are much faster, and have no drawbacks (?))
+# only keep the binary versions, which are much faster, except for camlp4
+# as native code cannot do a dynamic load
 for i in %{buildroot}%{_bindir}/*.opt ; do
-  nonopt=`echo $i | sed "s/.opt$//"`
-  rm -f $nonopt
-  ln -s `basename $i` $nonopt
+  [[ $i == %{buildroot}%{_bindir}/camlp4* ]] && continue
+  ln -sf `basename $i` ${i%.opt}
 done
 %endif
 
