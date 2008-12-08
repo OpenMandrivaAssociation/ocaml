@@ -4,10 +4,10 @@
 %endif
 %define build_labltk	1
 %define name	ocaml
-%define major	3.10
-%define minor	2
+%define major	3.11
+%define minor	0
 %define version	%{major}.%{minor}
-%define release	%mkrel 5
+%define release	%mkrel 1
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -20,14 +20,14 @@ URL:		http://caml.inria.fr
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Source0:	ftp://ftp.inria.fr/INRIA/cristal/caml-light/ocaml-%{major}/%{name}-%{version}.tar.bz2
-Source1:	ftp://ftp.inria.fr/INRIA/cristal/caml-light/ocaml-%{major}/%{name}-%{major}-refman.html.tar.bz2
+Source1:	ftp://ftp.inria.fr/INRIA/cristal/caml-light/ocaml-%{major}/%{name}-%{major}-refman.html.tar.gz
 Source4:	%{name}.menu
 Source5:	findlib-meta-files.tar.bz2
 Patch3:		ocaml-3.00-ocamltags--no-site-start.patch
 Patch6:		ocaml-3.04-do-not-add-rpath-X11R6_lib-when-using-option-L.patch
 Patch7:		ocaml-3.05-no-opt-for-debug-and-profile.patch
 Patch8:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
-Patch9:		ocaml-3.10.2-handle-tk-8.6.patch
+Patch9:		ocaml-3.11.0-handle-tk-8.6.patch
 Patch16:	ocaml-3.09.2-lib64.patch
 Patch17:	ocaml-3.09.2-db4.patch
 Patch18:	ocaml-3.09.3-compile-emacs-files-in-build-dir.patch
@@ -96,7 +96,7 @@ OCaml sources
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-%patch9 -p1
+%patch9 -p1 -b .tk
 %patch16 -p1 -b .lib64
 %patch17 -p1 -b .db4
 %patch18 -p1 -b .emacs
