@@ -7,7 +7,7 @@
 %define major	3.11
 %define minor	0
 %define version	%{major}.%{minor}
-%define release	%mkrel 1
+%define release	%mkrel 2
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -23,13 +23,13 @@ Source0:	ftp://ftp.inria.fr/INRIA/cristal/caml-light/ocaml-%{major}/%{name}-%{ve
 Source1:	ftp://ftp.inria.fr/INRIA/cristal/caml-light/ocaml-%{major}/%{name}-%{major}-refman.html.tar.gz
 Source4:	%{name}.menu
 Source5:	findlib-meta-files.tar.bz2
-Patch3:		ocaml-3.00-ocamltags--no-site-start.patch
+Patch3:		ocaml-3.11.0-ocamltags-no-site-start.patch
 Patch6:		ocaml-3.04-do-not-add-rpath-X11R6_lib-when-using-option-L.patch
-Patch7:		ocaml-3.05-no-opt-for-debug-and-profile.patch
+Patch7:		ocaml-3.11.0-no-opt-for-debug-and-profile.patch
 Patch8:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
 Patch9:		ocaml-3.11.0-handle-tk-8.6.patch
 Patch16:	ocaml-3.09.2-lib64.patch
-Patch17:	ocaml-3.09.2-db4.patch
+Patch17:	ocaml-3.11.0-db4.patch
 Patch18:	ocaml-3.09.3-compile-emacs-files-in-build-dir.patch
 
 BuildRequires:	libx11-devel
@@ -147,16 +147,14 @@ EOF
 # don't package mano man pages since we have the html files
 rm -rf %{buildroot}%{_mandir}/mano
 
+# install findlib META files
+cp -pr site-lib/* %{buildroot}%{_libdir}/ocaml/
+
 rm -f %{name}.list
 n="labltk|camlp4|ocamlbrowser|tkanim"
 (cd %{buildroot} ; find usr/bin ! -type d -printf "/%%p\n" | egrep -v $n) >> %{name}.list
 (cd %{buildroot} ; find usr/%{_lib}/ocaml ! -type d -printf "/%%p\n" | egrep -v $n) >> %{name}.list
 (cd %{buildroot} ; find usr/%{_lib}/ocaml   -type d -printf "%%%%dir /%%p\n" | egrep -v $n) >> %{name}.list
-
-# install findlib META files
-cp -pr site-lib %{buildroot}%{_libdir}/ocaml/
-# ensure dynamic libraries from site-lie availability
-echo '%{_libdir}/ocaml/site-lib/stublibs' >> %{buildroot}%{_libdir}/ocaml/ld.conf
 
 # install sources
 install -d -m 755 %{buildroot}%{_prefix}/src
@@ -172,9 +170,6 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 #%{_menudir}/*
 %{_datadir}/emacs/site-lisp/*
-%{_libdir}/ocaml/site-lib
-%exclude %{_libdir}/ocaml/site-lib/labltk
-%exclude %{_libdir}/ocaml/site-lib/camlp4
 %config(noreplace) %{_sysconfdir}/emacs/site-start.d/*
 
 %files doc
@@ -191,14 +186,12 @@ rm -rf %{buildroot}
 %{_libdir}/ocaml/*labltk*
 %{_libdir}/ocaml/stublibs/dlllabltk.so
 %{_libdir}/ocaml/stublibs/dlltkanim.so
-%{_libdir}/ocaml/site-lib/labltk
 %endif
 
 %files -n camlp4
 %defattr(-,root,root)
 %{_bindir}/*camlp4*
 %{_libdir}/ocaml/camlp4
-%{_libdir}/ocaml/site-lib/camlp4
 
 %files sources
 %defattr(-,root,root)
