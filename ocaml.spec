@@ -7,7 +7,7 @@
 %define major	3.11
 %define minor	0
 %define version	3.11.1
-%define release	%mkrel 1
+%define release	%mkrel 2
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
