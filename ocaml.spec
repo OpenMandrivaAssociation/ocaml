@@ -22,7 +22,6 @@ Group:		Development/Other
 Source0:	ftp://ftp.inria.fr/INRIA/cristal/caml-light/ocaml-%{major}/%{name}-%{version}.tar.bz2
 Source1:	ftp://ftp.inria.fr/INRIA/cristal/caml-light/ocaml-%{major}/%{name}-%{major}-refman.html.tar.gz
 Source4:	%{name}.menu
-Source5:	findlib-meta-files.tar.bz2
 Patch3:		ocaml-3.11.0-ocamltags-no-site-start.patch
 Patch6:		ocaml-3.04-do-not-add-rpath-X11R6_lib-when-using-option-L.patch
 Patch7:		ocaml-3.11.0-no-opt-for-debug-and-profile.patch
@@ -91,7 +90,6 @@ OCaml sources
 %prep
 %setup -q -T -b 0
 %setup -q -T -D -a 1
-%setup -q -T -D -a 5
 %patch3 -p1
 %patch6 -p1
 %patch7 -p1
@@ -146,9 +144,6 @@ EOF
 
 # don't package mano man pages since we have the html files
 rm -rf %{buildroot}%{_mandir}/mano
-
-# install findlib META files
-cp -pr site-lib/* %{buildroot}%{_libdir}/ocaml/
 
 rm -f %{name}.list
 n="labltk|camlp4|ocamlbrowser|tkanim"
