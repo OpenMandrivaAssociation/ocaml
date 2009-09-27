@@ -1,5 +1,5 @@
 %define build_ocamlopt	1
-%ifarch ppc64
+%ifarch ppc64 %mips %arm
 %define build_ocamlopt	0
 %endif
 %define build_labltk	1
@@ -7,7 +7,7 @@
 %define major	3.11
 %define minor	0
 %define version	3.11.1
-%define release	%mkrel 3
+%define release	%mkrel 4
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -184,7 +184,9 @@ rm -rf %{buildroot}
 %files doc
 %defattr(-,root,root)
 %doc htmlman/* 
+%if %build_ocamlopt
 %{_mandir}/man3/*
+%endif
 
 %if %{build_labltk}
 %files labltk
