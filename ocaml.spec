@@ -6,8 +6,8 @@
 %define name	ocaml
 %define major	3.11
 %define minor	0
-%define version	3.11.1
-%define release	%mkrel 5
+%define version	3.11.2
+%define release	%mkrel 1
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -19,8 +19,8 @@ Summary:	The Objective Caml compiler and programming environment
 URL:		http://caml.inria.fr
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
-Source0:	ftp://ftp.inria.fr/INRIA/cristal/caml-light/ocaml-%{major}/%{name}-%{version}.tar.bz2
-Source1:	ftp://ftp.inria.fr/INRIA/cristal/caml-light/ocaml-%{major}/%{name}-%{major}-refman.html.tar.gz
+Source0:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{version}.tar.bz2
+Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman.html.tar.gz
 Source4:	%{name}.menu
 
 # IMPORTANT:
