@@ -7,7 +7,7 @@
 %define major	3.11
 %define minor	0
 %define version	3.11.2
-%define release	%mkrel 1
+%define release	%mkrel 2
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -111,6 +111,10 @@ OCaml sources
 %patch18 -p1 -b .emacs
 
 rm -rf `find -name .cvsignore`
+
+# fix incorrect reference in camlp4 META file
+perl -pi -e 's|/usr/lib/ocaml/camlp4|%{_libdir}/camlp4|' \
+    site-lib-src/camlp4/META
 
 %build
 %ifarch alpha
