@@ -47,7 +47,7 @@ BuildRequires:	tcl
 BuildRequires:	tcl-devel
 BuildRequires:	tk
 BuildRequires:	tk-devel
-BuildRequires:	emacs-bin
+BuildRequires:	emacs
 BuildRequires:	db4-devel
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}
