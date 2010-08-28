@@ -4,10 +4,10 @@
 %endif
 %define build_labltk	1
 %define name	ocaml
-%define major	3.11
+%define major	3.12
 %define minor	0
-%define version	3.11.2
-%define release	%mkrel 4
+%define version	3.12.0
+%define release	%mkrel 1
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
@@ -36,7 +36,7 @@ Patch3:		ocaml-3.11.0-ocamltags-no-site-start.patch
 Patch6:		ocaml-3.04-do-not-add-rpath-X11R6_lib-when-using-option-L.patch
 Patch7:		ocaml-3.11.0-no-opt-for-debug-and-profile.patch
 Patch8:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
-Patch9:		ocaml-3.11.0-handle-tk-8.6.patch
+Patch9:		ocaml-3.12.0-handle-tk-8.6.patch
 Patch16:	ocaml-3.09.2-lib64.patch
 Patch17:	ocaml-3.11.0-db4.patch
 Patch18:	ocaml-3.09.3-compile-emacs-files-in-build-dir.patch
@@ -108,7 +108,7 @@ OCaml sources
 %patch9 -p1 -b .tk
 %patch16 -p1 -b .lib64
 %patch17 -p1 -b .db4
-%patch18 -p1 -b .emacs
+#patch18 -p1 -b .emacs
 
 rm -rf `find -name .cvsignore`
 
@@ -200,7 +200,6 @@ rm -rf %{buildroot}
 %{_bindir}/ocamlbrowser
 %{_libdir}/ocaml/*labltk*
 %{_libdir}/ocaml/stublibs/dlllabltk.so
-%{_libdir}/ocaml/stublibs/dlltkanim.so
 %endif
 
 %files -n camlp4
