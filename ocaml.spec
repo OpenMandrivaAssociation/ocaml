@@ -3,25 +3,21 @@
 %define build_ocamlopt	0
 %endif
 %define build_labltk	1
-%define name	ocaml
 %define major	3.12
 %define minor	0
-%define version	3.12.0
-%define release	%mkrel 1
 
 # we don't want the auto require to add require on the currently installed ocaml
 %define _requires_exceptions ocaml
 
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
+Name:		ocaml
+Version:	3.12.0
+Release:	%mkrel 2
 Summary:	The Objective Caml compiler and programming environment
 URL:		http://caml.inria.fr
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Source0:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{version}.tar.bz2
 Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman.html.tar.gz
-Source4:	%{name}.menu
 
 # IMPORTANT:
 # The contents (META's files) of this tarball comes from findlib
@@ -196,7 +192,6 @@ rm -rf %{buildroot}
 %doc Changes LICENSE README
 %{_includedir}/caml
 %{_mandir}/man1/*
-#%{_menudir}/*
 %{_datadir}/emacs/site-lisp/*
 %config(noreplace) %{_sysconfdir}/emacs/site-start.d/*
 
