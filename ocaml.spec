@@ -185,6 +185,8 @@ n="labltk|camlp4|ocamlbrowser|tkanim"
 install -d -m 755 %{buildroot}%{_prefix}/src
 tar xvjf %{SOURCE0} -C %{buildroot}%{_prefix}/src
 mv %{buildroot}%{_prefix}/src/%{name}-%{version} %{buildroot}%{_prefix}/src/%{name}
+install -d %{buildroot}%{_includedir}
+ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 
 %clean
 rm -rf %{buildroot}
@@ -192,6 +194,7 @@ rm -rf %{buildroot}
 %files -f %{name}.list
 %defattr(-,root,root)
 %doc Changes LICENSE README
+%{_includedir}/caml
 %{_mandir}/man1/*
 #%{_menudir}/*
 %{_datadir}/emacs/site-lisp/*
