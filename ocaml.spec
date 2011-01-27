@@ -32,6 +32,8 @@ Source4:	%{name}.menu
 # tar cfj  findlib-1.2.6-ocaml-3.11.2-meta-files.tar.bz2  site-lib-src/*/META
 Source5:	findlib-1.2.6-ocaml-3.11.2-meta-files.tar.bz2
 
+Patch0:         ocaml-3.12.0-rpath.patch
+Patch1:         ocaml-user-cflags.patch
 Patch3:		ocaml-3.11.0-ocamltags-no-site-start.patch
 Patch6:		ocaml-3.04-do-not-add-rpath-X11R6_lib-when-using-option-L.patch
 Patch7:		ocaml-3.11.0-no-opt-for-debug-and-profile.patch
@@ -101,6 +103,8 @@ OCaml sources
 %setup -q -T -b 0
 %setup -q -T -D -a 1
 %setup -q -T -D -a 5
+%patch0 -p1 -b .rpath
+%patch1 -p1 -b .cflags
 %patch3 -p1
 %patch6 -p1
 %patch7 -p1
@@ -121,11 +125,19 @@ perl -pi -e 's|/usr/lib/ocaml/camlp4|%{_libdir}/ocaml/camlp4|' \
 echo %{optflags} | grep -q mieee || { echo "on alpha you need -mieee to compile ocaml"; exit 1; }
 %endif
 
-./configure -bindir %{_bindir} -libdir %{_libdir}/ocaml -mandir %{_mandir}/man1
+CFLAGS="$RPM_OPT_FLAGS" ./configure \
+    -bindir %{_bindir} \
+    -libdir %{_libdir}/ocaml \
+    -x11lib %{_libdir} \
+    -x11include %{_includedir} \
+    -mandir %{_mandir}/man1
+
 make world
 %if %{build_ocamlopt}
 make opt opt.opt
 %endif
+make -C emacs ocamltags
+
 
 %install
 rm -rf %{buildroot}
