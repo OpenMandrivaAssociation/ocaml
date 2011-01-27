@@ -48,7 +48,7 @@ BuildRequires:	tcl-devel
 BuildRequires:	tk
 BuildRequires:	tk-devel
 BuildRequires:	emacs
-BuildRequires:	db4-devel
+BuildRequires:	db5.1-devel
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}
 Obsoletes:	ocaml-emacs
