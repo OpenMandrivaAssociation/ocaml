@@ -48,8 +48,7 @@ BuildRequires:	tk-devel
 BuildRequires:	emacs
 BuildRequires:	db5.1-devel
 
-Obsoletes:	ocaml-emacs
-Provides:	ocaml-emacs
+%rename		ocaml-emacs
 
 %package	doc
 Summary:	Documentation for OCaml
