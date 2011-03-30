@@ -61,18 +61,18 @@ Summary:	Preprocessor for OCaml
 Group:		Development/Other
 Requires:	%{name} = %{version}
 
-%package labltk
+%package	labltk
 Summary:	Tk toolkit binding for OCaml
 Group:		Development/Other
 Requires:	%{name} = %{version}
 Requires:	tk-devel
-Obsoletes:  ocamltk
+Obsoletes:	ocamltk
 
-%package sources
+%package	sources
 Summary:	OCaml sources
 Group:		Development/Other
 # don't add crazy deps
-AutoReqProv: No
+AutoReqProv:	No
 
 %description
 Objective Caml is a high-level, strongly-typed, functional and object-oriented
@@ -88,10 +88,10 @@ Documentation for OCaml
 %description -n	camlp4
 Preprocessor for OCaml
 
-%description labltk
+%description	labltk
 Tk toolkit binding for OCaml
 
-%description sources
+%description	sources
 OCaml sources
 
 %prep
