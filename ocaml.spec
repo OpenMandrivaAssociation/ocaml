@@ -11,7 +11,7 @@
 
 Name:		ocaml
 Version:	3.12.0
-Release:	%mkrel 2
+Release:	3
 Summary:	The Objective Caml compiler and programming environment
 URL:		http://caml.inria.fr
 License:	QPL with exceptions and LGPLv2 with exceptions
@@ -48,7 +48,6 @@ BuildRequires:	tk-devel
 BuildRequires:	emacs
 BuildRequires:	db5.1-devel
 
-BuildRoot:	%{_tmppath}/%{name}-%{version}
 Obsoletes:	ocaml-emacs
 Provides:	ocaml-emacs
 
@@ -136,7 +135,6 @@ make -C emacs ocamltags
 
 
 %install
-rm -rf %{buildroot}
 make install BINDIR=%{buildroot}%{_bindir} LIBDIR=%{buildroot}%{_libdir}/ocaml MANDIR=%{buildroot}%{_mandir}
 
 # remove stupid camlp4o.opt which can't work
@@ -184,11 +182,7 @@ mv %{buildroot}%{_prefix}/src/%{name}-%{version} %{buildroot}%{_prefix}/src/%{na
 install -d %{buildroot}%{_includedir}
 ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 
-%clean
-rm -rf %{buildroot}
-
 %files -f %{name}.list
-%defattr(-,root,root)
 %doc Changes LICENSE README
 %{_includedir}/caml
 %{_mandir}/man1/*
@@ -196,7 +190,6 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/emacs/site-start.d/*
 
 %files doc
-%defattr(-,root,root)
 %doc htmlman/* 
 %if %build_ocamlopt
 %{_mandir}/man3/*
@@ -204,7 +197,6 @@ rm -rf %{buildroot}
 
 %if %{build_labltk}
 %files labltk
-%defattr(-,root,root)
 %doc otherlibs/labltk/README otherlibs/labltk/example*
 %{_bindir}/*labltk*
 %{_bindir}/ocamlbrowser
@@ -213,10 +205,8 @@ rm -rf %{buildroot}
 %endif
 
 %files -n camlp4
-%defattr(-,root,root)
 %{_bindir}/*camlp4*
 %{_libdir}/ocaml/camlp4
 
 %files sources
-%defattr(-,root,root)
 %{_prefix}/src/%{name}
