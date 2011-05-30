@@ -11,7 +11,7 @@
 
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	4
+Release:	5
 Summary:	The Objective Caml compiler and programming environment
 URL:		http://caml.inria.fr
 License:	QPL with exceptions and LGPLv2 with exceptions
@@ -40,6 +40,8 @@ Patch9:		ocaml-3.12.0-handle-tk-8.6.patch
 Patch16:	ocaml-3.09.2-lib64.patch
 Patch17:	ocaml-3.11.0-db4.patch
 Patch18:	ocaml-3.09.3-compile-emacs-files-in-build-dir.patch
+# Fix for amd64 with binutils 2.21, see http://caml.inria.fr/mantis/view.php?id=5237
+Patch19:	ocaml-3.12.0-fix-ocamlopt-w.r.t.-binutils-2.21.patch
 
 BuildRequires:	libx11-devel
 BuildRequires:	ncurses-devel
@@ -109,6 +111,7 @@ OCaml sources
 %patch16 -p1 -b .lib64
 %patch17 -p1 -b .db4
 #patch18 -p1 -b .emacs
+%patch19 -p1 -b .binutils-2.21
 
 rm -rf `find -name .cvsignore`
 
