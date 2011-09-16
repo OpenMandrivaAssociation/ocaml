@@ -116,8 +116,7 @@ OCaml sources
 rm -rf `find -name .cvsignore`
 
 # fix incorrect reference in camlp4 META file
-perl -pi -e 's|/usr/lib/ocaml/camlp4|%{_libdir}/ocaml/camlp4|' \
-    site-lib-src/camlp4/META
+sed -ri -e 's|directory = "/usr/lib.*/ocaml/camlp4"|directory = "%{_libdir}/ocaml/camlp4"|g' site-lib-src/camlp4/META
 
 %build
 %ifarch alpha
