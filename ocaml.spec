@@ -11,7 +11,7 @@
 
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	6
+Release:	7
 Summary:	The Objective Caml compiler and programming environment
 URL:		http://caml.inria.fr
 License:	QPL with exceptions and LGPLv2 with exceptions
@@ -41,7 +41,7 @@ Patch7:		ocaml-3.11.0-no-opt-for-debug-and-profile.patch
 Patch8:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
 Patch9:		ocaml-3.12.0-handle-tk-8.6.patch
 Patch16:	ocaml-3.09.2-lib64.patch
-Patch17:	ocaml-3.11.0-db4.patch
+Patch17:	ocaml-3.11.0-db52.patch
 Patch18:	ocaml-3.09.3-compile-emacs-files-in-build-dir.patch
 
 BuildRequires:	libx11-devel
@@ -51,7 +51,7 @@ BuildRequires:	tcl-devel
 BuildRequires:	tk
 BuildRequires:	tk-devel
 BuildRequires:	emacs
-BuildRequires:	db5.1-devel
+BuildRequires:	db5.2-devel
 
 %rename		ocaml-emacs
 
