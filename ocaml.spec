@@ -51,7 +51,7 @@ BuildRequires:	tcl-devel
 BuildRequires:	tk
 BuildRequires:	tk-devel
 BuildRequires:	emacs
-BuildRequires:	db5.2-devel
+BuildRequires:	db-devel
 
 %rename		ocaml-emacs
 
