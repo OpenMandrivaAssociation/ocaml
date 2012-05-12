@@ -6,9 +6,6 @@
 %define major	3.12
 %define minor	1
 
-# we don't want the auto require to add require on the currently installed ocaml
-%define _requires_exceptions ocaml
-
 Name:		ocaml
 Version:	%{major}.%{minor}
 Release:	10
