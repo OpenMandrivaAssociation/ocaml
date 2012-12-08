@@ -1,4 +1,3 @@
 sources:
-  "findlib-1.3.3-ocaml-4.00.0-meta-files.tar.xz:"	740fa079db352cf1b27065a68355def949060462
-  "ocaml-4.00.0.tar.bz2:"	22c0ae84c0049e75ec1577d5c1a26c293bb740b3
-  "ocaml-4.00-refman-html.tar.gz:"	4777cfa97c893f91ba6ef49a8a89df152437bc3e
+  "ocaml-3.12-refman.html.tar.gz": 3a332ab965f6a917953f30e8ee069d9ecfb342a1
+  "ocaml-3.12.1.tar.bz2": 29b44117b116b1a5bc54a8b4514af483793a769f
