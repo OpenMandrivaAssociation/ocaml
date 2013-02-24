@@ -28,7 +28,7 @@ Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman
 # tar -Jcf findlib-1.2.7-ocaml-%{version}-meta-files.tar.xz  site-lib-src/*/META
 # notice the version macro in filename, this to imply that the META files has
 # to be built for *THIS* specific version!
-Source5:	findlib-1.3.3-ocaml-%{version}-meta-files.tar.xz
+Source5:	findlib-1.3.3-ocaml-4.00.0-meta-files.tar.xz
 
 Patch0:         ocaml-3.12.0-rpath.patch
 Patch1:         ocaml-user-cflags.patch
