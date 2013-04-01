@@ -1,5 +1,5 @@
 %define build_ocamlopt	1
-%ifarch ppc64 %mips %arm
+%ifarch ppc64 %mips
 %define build_ocamlopt	0
 %endif
 %define build_labltk	1
