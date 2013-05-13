@@ -40,7 +40,7 @@ Patch16:	ocaml-4.00.0-lib64.patch
 #Patch17:	ocaml-3.11.0-db52.patch
 Patch18:	ocaml-3.09.3-compile-emacs-files-in-build-dir.patch
 
-BuildRequires:	libx11-devel
+BuildRequires:	pkgconfig(x11)
 BuildRequires:	ncurses-devel
 BuildRequires:	tcl
 BuildRequires:	tcl-devel
