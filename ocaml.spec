@@ -6,13 +6,13 @@
 %define major	4.00
 %define minor	1
 
+Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
 Release:	2
-Summary:	The Objective Caml compiler and programming environment
-URL:		http://caml.inria.fr
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
+Url:		http://caml.inria.fr
 Source0:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{version}.tar.bz2
 Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman.html.tar.gz
 
@@ -30,49 +30,21 @@ Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman
 # to be built for *THIS* specific version!
 Source5:	findlib-1.3.3-ocaml-4.00.0-meta-files.tar.xz
 
-Patch0:         ocaml-3.12.0-rpath.patch
-Patch1:         ocaml-user-cflags.patch
+Patch0:		ocaml-3.12.0-rpath.patch
+Patch1:		ocaml-user-cflags.patch
 Patch3:		ocaml-3.11.0-ocamltags-no-site-start.patch
 Patch7:		ocaml-3.11.0-no-opt-for-debug-and-profile.patch
 Patch8:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
 Patch9:		ocaml-4.00.0-handle-tk-8.6.patch
 Patch16:	ocaml-4.00.0-lib64.patch
-#Patch17:	ocaml-3.11.0-db52.patch
-Patch18:	ocaml-3.09.3-compile-emacs-files-in-build-dir.patch
 
-BuildRequires:	pkgconfig(x11)
-BuildRequires:	ncurses-devel
-BuildRequires:	tcl
-BuildRequires:	tcl-devel
-BuildRequires:	tk
-BuildRequires:	tk-devel
 BuildRequires:	emacs
 BuildRequires:	db-devel
-
+BuildRequires:	pkgconfig(ncurses)
+BuildRequires:	pkgconfig(tcl)
+BuildRequires:	pkgconfig(x11)
+BuildRequires:	pkgconfig(tk)
 %rename		ocaml-emacs
-
-%package	doc
-Summary:	Documentation for OCaml
-Group:		Books/Computer books
-Requires:	%{name} = %{version}
-
-%package -n	camlp4
-Summary:	Preprocessor for OCaml
-Group:		Development/Other
-Requires:	%{name} = %{version}
-
-%package	labltk
-Summary:	Tk toolkit binding for OCaml
-Group:		Development/Other
-Requires:	%{name} = %{version}
-Requires:	tk-devel
-Obsoletes:	ocamltk
-
-%package	sources
-Summary:	OCaml sources
-Group:		Development/Other
-# don't add crazy deps
-AutoReqProv:	No
 
 %description
 Objective Caml is a high-level, strongly-typed, functional and object-oriented
@@ -82,14 +54,36 @@ This package comprises two batch compilers (a fast bytecode compiler and an
 optimizing native-code compiler), an interactive toplevel system, Lex&Yacc
 tools, a replay debugger, and a comprehensive library.
 
+%package	doc
+Summary:	Documentation for OCaml
+Group:		Books/Computer books
+Requires:	%{name} = %{version}
+
 %description	doc
 Documentation for OCaml
+
+%package -n	camlp4
+Summary:	Preprocessor for OCaml
+Group:		Development/Other
+Requires:	%{name} = %{version}
 
 %description -n	camlp4
 Preprocessor for OCaml
 
+%package	labltk
+Summary:	Tk toolkit binding for OCaml
+Group:		Development/Other
+Requires:	%{name} = %{version}
+Requires:	tk-devel
+
 %description	labltk
 Tk toolkit binding for OCaml
+
+%package	sources
+Summary:	OCaml sources
+Group:		Development/Other
+# don't add crazy deps
+AutoReqProv:	No
 
 %description	sources
 OCaml sources
@@ -98,16 +92,7 @@ OCaml sources
 %setup -q -T -b 0
 %setup -q -T -D -a 1
 %setup -q -T -D -a 5
-%patch0 -p1 -b .rpath
-%patch1 -p1 -b .cflags
-%patch3 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1 -b .tk
-%patch16 -p1 -b .lib64
-#%patch17 -p1 -b .db4
-#patch18 -p1 -b .emacs
-
+%apply_patches
 rm -rf `find -name .cvsignore`
 
 # fix incorrect reference in camlp4 META file
@@ -133,13 +118,18 @@ make -C emacs ocamltags
 
 
 %install
-make install BINDIR=%{buildroot}%{_bindir} LIBDIR=%{buildroot}%{_libdir}/ocaml MANDIR=%{buildroot}%{_mandir}
+make install \
+	BINDIR=%{buildroot}%{_bindir} \
+	LIBDIR=%{buildroot}%{_libdir}/ocaml \
+	MANDIR=%{buildroot}%{_mandir}
 
 # remove stupid camlp4o.opt which can't work
 #rm -f %{buildroot}%{_bindir}/camlp4*.opt
 #rm -f %{buildroot}%{_mandir}/man1/camlp4*.opt.*
 
-cd emacs; make install install-ocamltags BINDIR=%{buildroot}%{_bindir} EMACSDIR=%{buildroot}%{_datadir}/emacs/site-lisp; cd -
+cd emacs; make install install-ocamltags \
+	BINDIR=%{buildroot}%{_bindir} \
+	EMACSDIR=%{buildroot}%{_datadir}/emacs/site-lisp; cd -
 
 # fix
 perl -pi -e "s|%{buildroot}||" %{buildroot}%{_libdir}/ocaml/ld.conf
@@ -152,7 +142,6 @@ for i in %{buildroot}%{_bindir}/*.opt ; do
   ln -sf `basename $i` ${i%.opt}
 done
 %endif
-
 
 install -d %{buildroot}%{_sysconfdir}/emacs/site-start.d
 cat <<EOF >%{buildroot}%{_sysconfdir}/emacs/site-start.d/%{name}.el
@@ -208,3 +197,4 @@ ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 
 %files sources
 %{_prefix}/src/%{name}
+
