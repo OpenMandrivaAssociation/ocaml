@@ -42,6 +42,7 @@ Patch18:      0002-Ensure-empty-compilerlibs-directory-is-created-by-gi.patch
 Patch19:      0003-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
 Patch22:      0006-Add-support-for-ppc64.patch
 Patch23:      0007-yacc-Use-mkstemp-instead-of-mktemp.patch
+Patch24:	ocaml-aarch64.patch	
 
 BuildRequires:	emacs
 BuildRequires:	db-devel
