@@ -15,6 +15,7 @@ Group:		Development/Other
 Url:		http://caml.inria.fr
 Source0:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{version}.tar.bz2
 Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman-html.tar.gz
+Source3:	ocaml.rpmlintrc
 
 # IMPORTANT:
 # The contents (META's files) of this tarball comes from findlib
@@ -109,8 +110,11 @@ sed -ri -e 's|directory = "/usr/lib.*/ocaml/camlp4"|directory = "%{_libdir}/ocam
 echo %{optflags} | grep -q mieee || { echo "on alpha you need -mieee to compile ocaml"; exit 1; }
 %endif
 
-CFLAGS="$RPM_OPT_FLAGS" ./configure \
+CFLAGS="%optflags" ./configure \
     -bindir %{_bindir} \
+    -host %{_host} \
+    -cc "%{__cc}" \
+    -as "%{__as}" \
     -libdir %{_libdir}/ocaml \
     -x11lib %{_libdir} \
     -x11include %{_includedir} \
