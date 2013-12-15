@@ -3,18 +3,18 @@
 %define build_ocamlopt	0
 %endif
 %define build_labltk	1
-%define major	4.00
-%define minor	1
+%define major	4.01
+%define minor	0
 
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	6
+Release:	1
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://caml.inria.fr
 Source0:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{version}.tar.bz2
-Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman.html.tar.gz
+Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman-html.tar.gz
 
 # IMPORTANT:
 # The contents (META's files) of this tarball comes from findlib
@@ -35,8 +35,13 @@ Patch1:		ocaml-user-cflags.patch
 Patch3:		ocaml-3.11.0-ocamltags-no-site-start.patch
 Patch7:		ocaml-3.11.0-no-opt-for-debug-and-profile.patch
 Patch8:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
-Patch9:		ocaml-4.00.0-handle-tk-8.6.patch
 Patch16:	ocaml-4.00.0-lib64.patch
+#fedora patches
+Patch17:      0001-Add-.gitignore-file-to-ignore-generated-files.patch
+Patch18:      0002-Ensure-empty-compilerlibs-directory-is-created-by-gi.patch
+Patch19:      0003-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
+Patch22:      0006-Add-support-for-ppc64.patch
+Patch23:      0007-yacc-Use-mkstemp-instead-of-mktemp.patch
 
 BuildRequires:	emacs
 BuildRequires:	db-devel

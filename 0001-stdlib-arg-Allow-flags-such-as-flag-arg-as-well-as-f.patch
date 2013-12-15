@@ -1,0 +1,165 @@
+From 33962967111fbed55e93260b12cd65e372a0958a Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Sat, 9 Nov 2013 09:11:30 +0000
+Subject: [PATCH] stdlib: arg: Allow flags such as --flag=arg as well as --flag
+ arg.
+
+Fix for the following issue:
+http://caml.inria.fr/mantis/view.php?id=5197
+---
+ stdlib/arg.ml  | 85 ++++++++++++++++++++++++++++++++++------------------------
+ stdlib/arg.mli |  3 ++-
+ 2 files changed, 52 insertions(+), 36 deletions(-)
+
+diff --git a/stdlib/arg.ml b/stdlib/arg.ml
+index 8b64236..d94b75f 100644
+--- a/stdlib/arg.ml
++++ b/stdlib/arg.ml
+@@ -55,6 +55,12 @@ let rec assoc3 x l =
+   | _ :: t -> assoc3 x t
+ ;;
+ 
++let split s =
++  let i = String.index s '=' in
++  let len = String.length s in
++  String.sub s 0 i, String.sub s (i+1) (len-(i+1))
++;;
++
+ let make_symlist prefix sep suffix l =
+   match l with
+   | [] -> "<none>"
+@@ -130,73 +136,82 @@ let parse_argv_dynamic ?(current=current) argv speclist anonfun errmsg =
+   while !current < l do
+     let s = argv.(!current) in
+     if String.length s >= 1 && String.get s 0 = '-' then begin
+-      let action =
+-        try assoc3 s !speclist
+-        with Not_found -> stop (Unknown s)
++      let action, follow =
++        try assoc3 s !speclist, None
++        with Not_found ->
++          try
++            let keyword, arg = split s in
++            assoc3 keyword !speclist, Some arg
++          with Not_found -> stop (Unknown s)
++      in
++      let no_arg () =
++        match follow with
++        | None -> ()
++        | Some arg -> stop (Wrong (s, arg, "no argument"))
++      in
++      let get_arg () =
++        match follow with
++        | None ->
++          if !current + 1 < l then begin
++            incr current;
++            argv.(!current)
++          end
++          else stop (Missing s)
++        | Some arg -> arg
+       in
+       begin try
+         let rec treat_action = function
+-        | Unit f -> f ();
+-        | Bool f when !current + 1 < l ->
+-            let arg = argv.(!current + 1) in
++        | Unit f -> no_arg (); f ();
++        | Bool f ->
++            let arg = get_arg () in
+             begin try f (bool_of_string arg)
+             with Invalid_argument "bool_of_string" ->
+                    raise (Stop (Wrong (s, arg, "a boolean")))
+             end;
+-            incr current;
+-        | Set r -> r := true;
+-        | Clear r -> r := false;
+-        | String f when !current + 1 < l ->
+-            f argv.(!current + 1);
+-            incr current;
+-        | Symbol (symb, f) when !current + 1 < l ->
+-            let arg = argv.(!current + 1) in
++        | Set r -> no_arg (); r := true;
++        | Clear r -> no_arg (); r := false;
++        | String f ->
++            f (get_arg ());
++        | Symbol (symb, f) ->
++            let arg = get_arg () in
+             if List.mem arg symb then begin
+-              f argv.(!current + 1);
+-              incr current;
++              f arg;
+             end else begin
+               raise (Stop (Wrong (s, arg, "one of: "
+                                           ^ (make_symlist "" " " "" symb))))
+             end
+-        | Set_string r when !current + 1 < l ->
+-            r := argv.(!current + 1);
+-            incr current;
+-        | Int f when !current + 1 < l ->
+-            let arg = argv.(!current + 1) in
++        | Set_string r ->
++            r := get_arg ();
++        | Int f ->
++            let arg = get_arg () in
+             begin try f (int_of_string arg)
+             with Failure "int_of_string" ->
+                    raise (Stop (Wrong (s, arg, "an integer")))
+             end;
+-            incr current;
+-        | Set_int r when !current + 1 < l ->
+-            let arg = argv.(!current + 1) in
++        | Set_int r ->
++            let arg = get_arg () in
+             begin try r := (int_of_string arg)
+             with Failure "int_of_string" ->
+                    raise (Stop (Wrong (s, arg, "an integer")))
+             end;
+-            incr current;
+-        | Float f when !current + 1 < l ->
+-            let arg = argv.(!current + 1) in
++        | Float f ->
++            let arg = get_arg () in
+             begin try f (float_of_string arg);
+             with Failure "float_of_string" ->
+                    raise (Stop (Wrong (s, arg, "a float")))
+             end;
+-            incr current;
+-        | Set_float r when !current + 1 < l ->
+-            let arg = argv.(!current + 1) in
++        | Set_float r ->
++            let arg = get_arg () in
+             begin try r := (float_of_string arg);
+             with Failure "float_of_string" ->
+                    raise (Stop (Wrong (s, arg, "a float")))
+             end;
+-            incr current;
+         | Tuple specs ->
+             List.iter treat_action specs;
+         | Rest f ->
+             while !current < l - 1 do
+-              f argv.(!current + 1);
+-              incr current;
+-            done;
+-        | _ -> raise (Stop (Missing s))
++              f (get_arg ());
++            done
+         in
+         treat_action action
+       with Bad m -> stop (Message m);
+diff --git a/stdlib/arg.mli b/stdlib/arg.mli
+index 869d030..b8c6f11 100644
+--- a/stdlib/arg.mli
++++ b/stdlib/arg.mli
+@@ -25,7 +25,8 @@
+     [Unit], [Set] and [Clear] keywords take no argument. A [Rest]
+     keyword takes the remaining of the command line as arguments.
+     Every other keyword takes the following word on the command line
+-    as argument.
++    as argument.  For compatibility with GNU getopt_long, [keyword=arg]
++    is also allowed.
+     Arguments not preceded by a keyword are called anonymous arguments.
+ 
+    Examples ([cmd] is assumed to be the command name):
+-- 
+1.8.3.1
+

@@ -24,7 +24,7 @@
 +
 +host_cpu=`uname -m`
 +case $host_cpu:$ocaml_cv_cc_64bit_output in
-+ppc64:yes | s390x:yes | sparc64:yes | x86_64:yes)
++aarch64:yes |ppc64:yes | s390x:yes | sparc64:yes | x86_64:yes)
 +  lib="lib64"
 +  ;;
 +*:*)
