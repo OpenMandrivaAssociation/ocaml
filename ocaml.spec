@@ -6,6 +6,8 @@
 %define major	4.01
 %define minor	0
 
+%bcond_with emacs
+
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
@@ -45,13 +47,15 @@ Patch22:      0006-Add-support-for-ppc64.patch
 Patch23:      0007-yacc-Use-mkstemp-instead-of-mktemp.patch
 Patch24:	ocaml-aarch64.patch	
 
-BuildRequires:	emacs
 BuildRequires:	db-devel
 BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(tcl)
 BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(tk)
+%if %{with emacs}
+BuildRequires:	emacs
 %rename		ocaml-emacs
+%endif
 
 %description
 Objective Caml is a high-level, strongly-typed, functional and object-oriented
@@ -137,9 +141,14 @@ make install \
 #rm -f %{buildroot}%{_bindir}/camlp4*.opt
 #rm -f %{buildroot}%{_mandir}/man1/camlp4*.opt.*
 
+%if %{with emacs}
 cd emacs; make install install-ocamltags \
 	BINDIR=%{buildroot}%{_bindir} \
 	EMACSDIR=%{buildroot}%{_datadir}/emacs/site-lisp; cd -
+%else
+make -C emacs install-ocamltags \
+	BINDIR=%{buildroot}%{_bindir}
+%endif
 
 # fix
 perl -pi -e "s|%{buildroot}||" %{buildroot}%{_libdir}/ocaml/ld.conf
@@ -153,12 +162,14 @@ for i in %{buildroot}%{_bindir}/*.opt ; do
 done
 %endif
 
+%if %{with emacs}
 install -d %{buildroot}%{_sysconfdir}/emacs/site-start.d
 cat <<EOF >%{buildroot}%{_sysconfdir}/emacs/site-start.d/%{name}.el
 (require 'caml-font)
 (autoload 'caml-mode "caml" "Caml editing mode" t)
 (add-to-list 'auto-mode-alist '("\\\\.mli?$" . caml-mode))
 EOF
+%endif
 
 # don't package mano man pages since we have the html files
 rm -rf %{buildroot}%{_mandir}/mano
@@ -183,8 +194,10 @@ ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 %doc Changes LICENSE README
 %{_includedir}/caml
 %{_mandir}/man1/*
+%if %{with emacs}
 %{_datadir}/emacs/site-lisp/*
 %config(noreplace) %{_sysconfdir}/emacs/site-start.d/*
+%endif
 
 %files doc
 %doc htmlman/* 
