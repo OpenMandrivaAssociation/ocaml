@@ -11,7 +11,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	2
+Release:	4
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://caml.inria.fr
@@ -38,14 +38,19 @@ Patch1:		ocaml-user-cflags.patch
 Patch3:		ocaml-3.11.0-ocamltags-no-site-start.patch
 Patch7:		ocaml-3.11.0-no-opt-for-debug-and-profile.patch
 Patch8:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
-Patch16:	ocaml-4.00.0-lib64.patch
+#Patch16:	ocaml-4.00.0-lib64.patch
+#Patch18:	ocaml-3.09.3-compile-emacs-files-in-build-dir.patch
+# Workaround for upstream http://caml.inria.fr/mantis/view.php?id=5753
+# Remove ocamltoplevel.cmxa from META file
+Patch19:	ocaml-4.00.1-fix-META-ocamltoplevel.cmxa.patch
+
 #fedora patches
-Patch17:      0001-Add-.gitignore-file-to-ignore-generated-files.patch
-Patch18:      0002-Ensure-empty-compilerlibs-directory-is-created-by-gi.patch
-Patch19:      0003-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
-Patch22:      0006-Add-support-for-ppc64.patch
-Patch23:      0007-yacc-Use-mkstemp-instead-of-mktemp.patch
-Patch24:	ocaml-aarch64.patch	
+Patch100:	0001-Add-.gitignore-file-to-ignore-generated-files.patch
+Patch101:	0002-Ensure-empty-compilerlibs-directory-is-created-by-gi.patch
+Patch102:	0003-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
+Patch103:	0006-Add-support-for-ppc64.patch
+Patch104:	0007-yacc-Use-mkstemp-instead-of-mktemp.patch
+Patch105:	ocaml-aarch64.patch	
 
 BuildRequires:	db-devel
 BuildRequires:	pkgconfig(ncurses)
@@ -104,6 +109,8 @@ OCaml sources
 %setup -q -T -D -a 1
 %setup -q -T -D -a 5
 %apply_patches
+# delete backup files to be sure that they don't end up in package
+find -name \*.00??~ -delete
 rm -rf `find -name .cvsignore`
 
 # fix incorrect reference in camlp4 META file
