@@ -11,7 +11,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	5
+Release:	6
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://caml.inria.fr
@@ -106,7 +106,7 @@ Obsoletes:	ocamltk < %{version}
 Summary:	X11 library for OCaml
 Group:		Development/Other
 Requires:	%{name}-compiler = %{version}
-Requires:	libx11-devel
+Requires:	pkgconfig(x11)
 # 2012-07-14: conflict for upgrade (when the x11 subpackage is created)
 Conflicts:	ocaml < 4.01.0-5
 
