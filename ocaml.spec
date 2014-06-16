@@ -11,7 +11,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	4
+Release:	5
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://caml.inria.fr
@@ -70,39 +70,93 @@ This package comprises two batch compilers (a fast bytecode compiler and an
 optimizing native-code compiler), an interactive toplevel system, Lex&Yacc
 tools, a replay debugger, and a comprehensive library.
 
+%package	compiler
+Summary:	Compiler and Runtime for OCaml
+Group:		Development/Other
+Requires:	%{name}-compiler = %{version}
+Conflicts:	ocaml < 4.01.0-5
+
 %package	doc
 Summary:	Documentation for OCaml
-Group:		Books/Computer books
-Requires:	%{name} = %{version}
-
-%description	doc
-Documentation for OCaml
+Group:		Development/Other
+BuildArch:	noarch
+Requires:	%{name}-compiler = %{version}
 
 %package -n	camlp4
 Summary:	Preprocessor for OCaml
 Group:		Development/Other
-Requires:	%{name} = %{version}
+Requires:	%{name}-compiler = %{version}
+
+%if %{build_ocamlopt}
+%package -n	camlp4-devel
+Summary:	Development files for camlp4
+Group:		Development/Other
+Requires:	camlp4 = %{version}
+Requires:	%{name}-compiler = %{version}
+%endif
+
+%package labltk
+Summary:	Tk toolkit binding for OCaml
+Group:		Development/Other
+Requires:	%{name}-compiler = %{version}
+Requires:	tk-devel
+Obsoletes:	ocamltk < %{version}
+
+%package x11
+Summary:	X11 library for OCaml
+Group:		Development/Other
+Requires:	%{name}-compiler = %{version}
+Requires:	libx11-devel
+# 2012-07-14: conflict for upgrade (when the x11 subpackage is created)
+Conflicts:	ocaml < 4.01.0-5
+
+%package sources
+Summary:	OCaml sources
+Group:		Development/Other
+BuildArch:	noarch
+# don't add crazy deps
+AutoReqProv: No
+
+%package compiler-libs
+Summary:	OCaml compiler library
+Group:		Development/Other
+Requires:	%{name}-compiler = %{version}
+Conflicts:	%{name} < 4.01.0-5
+
+%description
+OCaml is a high-level, strongly-typed, functional and object-oriented
+programming language from the ML family of languages.
+
+%description compiler
+This package comprises two batch OCaml compilers (a fast byte-code compiler and
+an optimizing native-code compiler), an interactive top-level system, Lex&Yacc
+tools, a replay debugger, and a comprehensive library.
+
+%description	doc
+Documentation for OCaml
 
 %description -n	camlp4
 Preprocessor for OCaml
 
-%package	labltk
-Summary:	Tk toolkit binding for OCaml
-Group:		Development/Other
-Requires:	%{name} = %{version}
-Requires:	tk-devel
+%if %{build_ocamlopt}
+%description -n	camlp4-devel
+This package contains the development files needed to build applications
+using camlp4.
+%endif
 
-%description	labltk
+%description labltk
 Tk toolkit binding for OCaml
 
-%package	sources
-Summary:	OCaml sources
-Group:		Development/Other
-# don't add crazy deps
-AutoReqProv:	No
+%description x11
+X11 library for OCaml.
 
-%description	sources
+%description sources
 OCaml sources
+
+%description compiler-libs
+This package contains several modules used internally by the OCaml
+compilers.  They are not needed for normal OCaml development, but may
+be helpful in the development of certain applications.
 
 %prep
 %setup -q -T -b 0
@@ -184,11 +238,27 @@ rm -rf %{buildroot}%{_mandir}/mano
 # install findlib META files
 cp -pr site-lib-src/* %{buildroot}%{_libdir}/ocaml/
 
+# fix me: this one should not be in the input
+if [ -f %{buildroot}%{_libdir}/ocaml/dbm/META ]
+then rm -f %{buildroot}%{_libdir}/ocaml/dbm/META; fi
+
 rm -f %{name}.list
-n="labltk|camlp4|ocamlbrowser|tkanim"
+n="labltk|camlp4|ocamlbrowser|tkanim|graphics|X11"
 (cd %{buildroot} ; find usr/bin ! -type d -printf "/%%p\n" | egrep -v $n) >> %{name}.list
 (cd %{buildroot} ; find usr/%{_lib}/ocaml ! -type d -printf "/%%p\n" | egrep -v $n) >> %{name}.list
 (cd %{buildroot} ; find usr/%{_lib}/ocaml   -type d -printf "%%%%dir /%%p\n" | egrep -v $n) >> %{name}.list
+
+mkdir -p %{buildroot}%{_datadir}/applications
+cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << EOF
+[Desktop Entry]
+Name=OCaml
+Comment=%{summary}
+Exec=%{name}
+Icon=interpreters_section
+Terminal=true
+Type=Application
+Categories=Development;
+EOF
 
 # install sources
 install -d -m 755 %{buildroot}%{_prefix}/src
@@ -197,20 +267,22 @@ mv %{buildroot}%{_prefix}/src/%{name}-%{version} %{buildroot}%{_prefix}/src/%{na
 install -d %{buildroot}%{_includedir}
 ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 
-%files -f %{name}.list
+%files
+
+%files compiler -f %{name}.list
 %doc Changes LICENSE README
 %{_includedir}/caml
 %{_mandir}/man1/*
+%{_datadir}/applications/*
 %if %{with emacs}
 %{_datadir}/emacs/site-lisp/*
 %config(noreplace) %{_sysconfdir}/emacs/site-start.d/*
 %endif
+%exclude %{_libdir}/ocaml/compiler-libs
 
 %files doc
 %doc htmlman/* 
-%if %build_ocamlopt
 %{_mandir}/man3/*
-%endif
 
 %if %{build_labltk}
 %files labltk
@@ -223,8 +295,62 @@ ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 
 %files -n camlp4
 %{_bindir}/*camlp4*
-%{_libdir}/ocaml/camlp4
+%dir %{_libdir}/ocaml/camlp4
+%dir %{_libdir}/ocaml/camlp4/Camlp4Filters
+%dir %{_libdir}/ocaml/camlp4/Camlp4Parsers
+%dir %{_libdir}/ocaml/camlp4/Camlp4Printers
+%dir %{_libdir}/ocaml/camlp4/Camlp4Top
+%{_libdir}/ocaml/camlp4/META
+%{_libdir}/ocaml/camlp4/*.cma
+%{_libdir}/ocaml/camlp4/*.cmi
+%{_libdir}/ocaml/camlp4/*.cmo
+%{_libdir}/ocaml/camlp4/*/*.cmi
+%{_libdir}/ocaml/camlp4/*/*.cmo
+
+%if %{build_ocamlopt}
+%files -n camlp4-devel
+%{_libdir}/ocaml/camlp4/*.a
+%{_libdir}/ocaml/camlp4/*.o
+%{_libdir}/ocaml/camlp4/*.cmxa
+%{_libdir}/ocaml/camlp4/*.cmx
+%{_libdir}/ocaml/camlp4/*/*.o
+%{_libdir}/ocaml/camlp4/*/*.cmx
+%endif
+
+%files x11
+%if %{build_ocamlopt}
+%{_libdir}/ocaml/graphics.a
+%endif
+%{_libdir}/ocaml/graphics.cma
+%{_libdir}/ocaml/graphics.cmi
+%if %{build_ocamlopt}
+%{_libdir}/ocaml/graphics.cmx
+%{_libdir}/ocaml/graphics.cmxa
+%{_libdir}/ocaml/graphics.cmxs
+%endif
+%{_libdir}/ocaml/graphics.mli
+%{_libdir}/ocaml/libgraphics.a
+%{_libdir}/ocaml/stublibs/dllgraphics.so
+%{_libdir}/ocaml/graphics/META
+%dir %{_libdir}/ocaml/graphics
+%{_libdir}/ocaml/graphicsX11.cmi
+%if %{build_ocamlopt}
+%{_libdir}/ocaml/graphicsX11.cmx
+%endif
+%{_libdir}/ocaml/graphicsX11.mli
 
 %files sources
 %{_prefix}/src/%{name}
 
+%files compiler-libs
+%dir %{_libdir}/ocaml/compiler-libs
+%{_libdir}/ocaml/compiler-libs/META
+%{_libdir}/ocaml/compiler-libs/*.cmi
+%{_libdir}/ocaml/compiler-libs/*.cmo
+%{_libdir}/ocaml/compiler-libs/*.cma
+%if %{build_ocamlopt}
+%{_libdir}/ocaml/compiler-libs/*.a
+%{_libdir}/ocaml/compiler-libs/*.cmxa
+/%{_libdir}/ocaml/compiler-libs/*.cmx
+%{_libdir}/ocaml/compiler-libs/*.o
+%endif
