@@ -11,7 +11,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	6
+Release:	7
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://caml.inria.fr
@@ -101,6 +101,7 @@ Group:		Development/Other
 Requires:	%{name}-compiler = %{version}
 Requires:	tk-devel
 Obsoletes:	ocamltk < %{version}
+%define	__noautoreq '(/usr/bin/ocamlrun)'
 
 %package x11
 Summary:	X11 library for OCaml
