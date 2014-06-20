@@ -11,7 +11,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	7
+Release:	8
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://caml.inria.fr
@@ -61,6 +61,10 @@ BuildRequires:	pkgconfig(tk)
 BuildRequires:	emacs
 %rename		ocaml-emacs
 %endif
+
+Requires: %{name}-compiler = %{EVRD}
+Requires: %{name}-compiler-libs = %{EVRD}
+Requires: camlp4 = %{EVRD}
 
 %description
 Objective Caml is a high-level, strongly-typed, functional and object-oriented
