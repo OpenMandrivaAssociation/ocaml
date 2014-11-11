@@ -1,4 +1,3 @@
 sources:
-  findlib-1.3.3-ocaml-4.00.0-meta-files.tar.xz: 740fa079db352cf1b27065a68355def949060462
-  ocaml-4.01-refman-html.tar.gz: cd8d59ca75525c0dfa3cfaa29477c4ea5fa1c839
-  ocaml-4.01.0.tar.bz2: a814feca204e50f082515a3845cdd18c6d0e24b6
+  ocaml-4.02.1.tar.gz: 6af8c67f2badece81d8e1d1ce70568a16e42313e
+  ocaml-4.02-refman-html.tar.gz: 1cedcda87c4303de5ba80d01667b1d149dd83dc6
