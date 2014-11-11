@@ -8,7 +8,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	9
+Release:	10
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://caml.inria.fr
@@ -61,6 +61,7 @@ tools, a replay debugger, and a comprehensive library.
 %package	compiler
 Summary:	Compiler and Runtime for OCaml
 Group:		Development/Other
+Provides:	%{_bindir}/ocamlrun %{version}
 Requires:	%{name}-compiler = %{version}
 Conflicts:	ocaml < 4.01.0-5
 
