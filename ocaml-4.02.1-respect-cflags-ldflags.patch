@@ -1,5 +1,5 @@
 --- ocaml-4.02.1/configure	2014-10-03 19:25:46.000000000 +0000
-+++ ocaml-4.02.1/configure.tpg	2015-11-16 20:11:13.283857283 +0000
++++ ocaml-4.02.1/configure.tpg	2015-11-16 22:13:40.120167834 +0000
 @@ -306,8 +306,8 @@
  bytecc="$cc"
  mkexe="\$(BYTECC)"
@@ -122,6 +122,54 @@
  esac
  
  # Configure compiler to use in further tests
+@@ -661,7 +661,7 @@
+       shared_libraries_supported=true;;
+     *-*-linux-gnu|*-*-linux|*-*-freebsd[3-9]*|*-*-freebsd[1-9][0-9]*|*-*-openbsd*|*-*-netbsd*|*-*-gnu*|*-*-haiku*)
+       sharedcccompopts="-fPIC"
+-      mksharedlib="$bytecc -shared"
++      mksharedlib="$bytecc $LDFLAGS -shared"
+       bytecclinkopts="$bytecclinkopts -Wl,-E"
+       byteccrpath="-Wl,-rpath,"
+       mksharedlibrpath="-Wl,-rpath,"
+@@ -671,13 +671,13 @@
+       case "$bytecc" in
+         *gcc*)
+           sharedcccompopts="-fPIC"
+-          mksharedlib="$bytecc -shared"
++          mksharedlib="$bytecc $LDFLAGS -shared"
+           byteccrpath="-Wl,-rpath,"
+           mksharedlibrpath="-Wl,-rpath,"
+           shared_libraries_supported=true;;
+         cc*)
+           sharedcccompopts=""
+-          mksharedlib="ld -shared -expect_unresolved '*'"
++          mksharedlib="ld $LDFLAGS -shared -expect_unresolved '*'"
+           byteccrpath="-Wl,-rpath,"
+           mksharedlibrpath="-rpath "
+           shared_libraries_supported=true;;
+@@ -687,11 +687,11 @@
+         *gcc*)
+           sharedcccompopts="-fPIC"
+           if sh ./solaris-ld; then
+-            mksharedlib="$bytecc -shared"
++            mksharedlib="$bytecc $LDFLAGS -shared"
+             byteccrpath="-R"
+             mksharedlibrpath="-R"
+           else
+-            mksharedlib="$bytecc -shared"
++            mksharedlib="$bytecc $LDFLAGS -shared"
+             bytecclinkopts="$bytecclinkopts -Wl,-E"
+             natdynlinkopts="-Wl,-E"
+             byteccrpath="-Wl,-rpath,"
+@@ -730,7 +730,7 @@
+       shared_libraries_supported=false;;
+     *-*-openbsd*)
+       sharedcccompopts="-fPIC"
+-      mksharedlib="$bytecc -shared"
++      mksharedlib="$bytecc $LDFLAGS -shared"
+       bytecclinkopts="$bytecclinkopts -Wl,-E"
+       natdynlinkopts="-Wl,-E"
+       byteccrpath="-Wl,-rpath,"
 @@ -859,23 +859,23 @@
    nativecc="$ccoption"
  fi
