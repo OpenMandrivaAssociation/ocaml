@@ -1,4 +1,4 @@
-%define _disable_lto 1
+%define _disable_ld_no_undefined 1
 %define build_ocamlopt	1
 %define build_labltk	1
 %define major	4.02
