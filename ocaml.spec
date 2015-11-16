@@ -124,11 +124,13 @@ find -name \*.00??~ -delete
 rm -rf `find -name .cvsignore`
 
 %build
+%setup_compile_flags
+export LINKFLAGS="%{ldflags}"
 %ifarch alpha
 echo %{optflags} | grep -q mieee || { echo "on alpha you need -mieee to compile ocaml"; exit 1; }
 %endif
 
-CFLAGS="%optflags" ./configure \
+./configure \
     -bindir %{_bindir} \
     -host %{_host} \
     -cc "%{__cc}" \
