@@ -1,3 +1,4 @@
+%define _disable_lto 1
 %define build_ocamlopt	1
 %define build_labltk	1
 %define major	4.02
@@ -8,7 +9,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	13
+Release:	14
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://caml.inria.fr
