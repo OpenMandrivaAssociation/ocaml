@@ -1,0 +1,156 @@
+--- ocaml-4.02.1/configure	2014-10-03 19:25:46.000000000 +0000
++++ ocaml-4.02.1/configure.tpg	2015-11-16 20:11:13.283857283 +0000
+@@ -306,8 +306,8 @@
+ bytecc="$cc"
+ mkexe="\$(BYTECC)"
+ mkexedebugflag="-g"
+-bytecccompopts=""
+-bytecclinkopts=""
++bytecccompopts="${CFLAGS}"
++bytecclinkopts="${LDFLAGS}"
+ dllccompopts=""
+ ostype="Unix"
+ exe=""
+@@ -318,14 +318,14 @@
+ case "$bytecc,$target" in
+   cc,*-*-nextstep*)
+     # GNU C extensions disabled, but __GNUC__ still defined!
+-    bytecccompopts="-fno-defer-pop $gcc_warnings -U__GNUC__ -posix"
+-    bytecclinkopts="-posix";;
++    bytecccompopts="$bytecccompopts -fno-defer-pop $gcc_warnings -U__GNUC__ -posix"
++    bytecclinkopts="$bytecclinkopts -posix";;
+   *,*-*-rhapsody*)
+     # Almost the same as NeXTStep
+-    bytecccompopts="-fno-defer-pop $gcc_warnings -DSHRINKED_GNUC"
++    bytecccompopts="$bytecccompopts -fno-defer-pop $gcc_warnings -DSHRINKED_GNUC"
+     mathlib="";;
+   *,*-*-darwin*)
+-    bytecccompopts="$gcc_warnings"
++    bytecccompopts="$bytecccompopts $gcc_warnings"
+     mathlib=""
+     mkexe="$mkexe -Wl,-no_compact_unwind"
+     # Tell gcc that we can use 32-bit code addresses for threaded code
+@@ -334,47 +334,47 @@
+     echo "#  define ARCH_CODE32" >> m.h
+     echo "#endif" >> m.h;;
+   *,*-*-haiku*)
+-    bytecccompopts="-fno-defer-pop $gcc_warnings"
++    bytecccompopts="$bytecccompopts -fno-defer-pop $gcc_warnings"
+     # No -lm library
+     mathlib="";;
+   *,*-*-beos*)
+-    bytecccompopts="-fno-defer-pop $gcc_warnings"
++    bytecccompopts="$bytecccompopts -fno-defer-pop $gcc_warnings"
+     # No -lm library
+     mathlib="";;
+   *gcc,alpha*-*-osf*)
+-    bytecccompopts="-fno-defer-pop $gcc_warnings"
++    bytecccompopts="$bytecccompopts -fno-defer-pop $gcc_warnings"
+     if cc="$bytecc" sh ./hasgot -mieee; then
+       bytecccompopts="-mieee $bytecccompopts";
+     fi
+     # Put code and static data in lower 4GB
+-    bytecclinkopts="-Wl,-T,12000000 -Wl,-D,14000000"
++    bytecclinkopts="$bytecclinkopts -Wl,-T,12000000 -Wl,-D,14000000"
+     # Tell gcc that we can use 32-bit code addresses for threaded code
+     echo "#define ARCH_CODE32" >> m.h;;
+   cc,alpha*-*-osf*)
+-    bytecccompopts="-std1 -ieee";;
++    bytecccompopts="$bytecccompopts -std1 -ieee";;
+   *gcc*,alpha*-*-linux*)
+     if cc="$bytecc" sh ./hasgot -mieee; then
+       bytecccompopts="-mieee $bytecccompopts";
+     fi;;
+   cc,mips-*-irix6*)
+     # Add -n32 flag to ensure compatibility with native-code compiler
+-    bytecccompopts="-n32"
++    bytecccompopts="$bytecccompopts -n32"
+     # Turn off warning "unused library"
+-    bytecclinkopts="-n32 -Wl,-woff,84";;
++    bytecclinkopts="$bytecclinkopts -n32 -Wl,-woff,84";;
+   cc*,mips-*-irix6*)
+     # (For those who want to force "cc -64")
+     # Turn off warning "unused library"
+-    bytecclinkopts="-Wl,-woff,84";;
++    bytecclinkopts="$bytecclinkopts -Wl,-woff,84";;
+   *,alpha*-*-unicos*)
+     # For the Cray T3E
+-    bytecccompopts="-DUMK";;
++    bytecccompopts="$bytecccompopts -DUMK";;
+   *gcc*,powerpc-*-aix*)
+     # Avoid name-space pollution by requiring Unix98-conformant includes
+-    bytecccompopts="-fno-defer-pop $gcc_warnings -D_XOPEN_SOURCE=500";;
++    bytecccompopts="$bytecccompopts -fno-defer-pop $gcc_warnings -D_XOPEN_SOURCE=500";;
+   *,powerpc-*-aix*)
+-    bytecccompopts="-D_XOPEN_SOURCE=500";;
++    bytecccompopts="$bytecccompopts -D_XOPEN_SOURCE=500";;
+   *gcc*,*-*-cygwin*)
+-    bytecccompopts="-fno-defer-pop $gcc_warnings -U_WIN32"
++    bytecccompopts="$bytecccompopts -fno-defer-pop $gcc_warnings -U_WIN32"
+     dllccompopts="-U_WIN32 -DCAML_DLL"
+     if test $with_sharedlibs = yes; then
+       flexlink="flexlink -chain cygwin -merge-manifest -stack 16777216"
+@@ -390,12 +390,12 @@
+     fi
+     if test $with_sharedlibs = no; then
+       mkexe="$mkexe -Wl,--stack,16777216"
+-      bytecclinkopts="-Wl,--stack,16777216"
++      bytecclinkopts="$bytecclinkopts -Wl,--stack,16777216"
+     fi
+     exe=".exe"
+     ostype="Cygwin";;
+   *gcc*,*-*-mingw*)
+-    bytecccompopts="-fno-defer-pop $gcc_warnings"
++    bytecccompopts="$bytecccompopts -fno-defer-pop $gcc_warnings"
+     dllccompopt="-DCAML_DLL"
+     if test $with_sharedlibs = yes; then
+       case "$target" in
+@@ -419,14 +419,14 @@
+     SO="dll"
+     ;;
+   *gcc*,x86_64-*-linux*)
+-    bytecccompopts="-fno-defer-pop $gcc_warnings"
++    bytecccompopts="$bytecccompopts -fno-defer-pop $gcc_warnings"
+     # Tell gcc that we can use 32-bit code addresses for threaded code
+     # unless we are compiled for a shared library (-fPIC option)
+     echo "#ifndef __PIC__" >> m.h
+     echo "#  define ARCH_CODE32" >> m.h
+     echo "#endif" >> m.h;;
+   *gcc*)
+-    bytecccompopts="-fno-defer-pop $gcc_warnings";;
++    bytecccompopts="$bytecccompopts -fno-defer-pop $gcc_warnings";;
+ esac
+ 
+ # Configure compiler to use in further tests
+@@ -859,23 +859,23 @@
+   nativecc="$ccoption"
+ fi
+ 
+-nativecccompopts=''
+-nativecclinkopts=''
++nativecccompopts="${CFLAGS}"
++nativecclinkopts="${LDFLAGS}"
+ # FIXME the naming of nativecclinkopts is broken: these are options for
+ # ld (for shared libs), not for cc
+ nativeccrpath="$byteccrpath"
+ 
+ case "$arch,$nativecc,$system,$target" in
+-  *,*,nextstep,*)      nativecccompopts="$gcc_warnings -U__GNUC__ -posix"
+-                       nativecclinkopts="-posix";;
++  *,*,nextstep,*)      nativecccompopts="$nativecccompopts $gcc_warnings -U__GNUC__ -posix"
++                       nativecclinkopts="$nativecclinkopts -posix";;
+   *,*,rhapsody,*darwin[1-5].*)
+-                       nativecccompopts="$gcc_warnings -DSHRINKED_GNUC";;
+-  *,*,rhapsody,*)      nativecccompopts="$gcc_warnings -DDARWIN_VERSION_6 $dl_defs"
++                       nativecccompopts="$nativecccompopts $gcc_warnings -DSHRINKED_GNUC";;
++  *,*,rhapsody,*)      nativecccompopts="$nativecccompopts $gcc_warnings -DDARWIN_VERSION_6 $dl_defs"
+                        if $arch64; then partialld="ld -r -arch ppc64"; fi;;
+-  *,gcc*,cygwin,*)     nativecccompopts="$gcc_warnings -U_WIN32";;
++  *,gcc*,cygwin,*)     nativecccompopts="$nativecccompopts $gcc_warnings -U_WIN32";;
+   amd64,gcc*,macosx,*) partialld="ld -r -arch x86_64";;
+   amd64,gcc*,solaris,*) partialld="ld -r -m elf_x86_64";;
+-  *,gcc*,*,*)          nativecccompopts="$gcc_warnings";;
++  *,gcc*,*,*)          nativecccompopts="$nativecccompopts $gcc_warnings";;
+ esac
+ 
+ asppprofflags='-DPROFILING'

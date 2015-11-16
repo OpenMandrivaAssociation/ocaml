@@ -19,7 +19,7 @@ Source3:	ocaml.rpmlintrc
 Patch0:		ocaml-3.11.0-ocamltags-no-site-start.patch
 Patch1:		ocaml-3.11.0-no-opt-for-debug-and-profile.patch
 Patch2:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
-Patch4:		0005-configure-Allow-user-defined-C-compiler-flags.patch
+Patch4:		ocaml-4.02.1-respect-cflags-ldflags.patch
 
 # fedora
 Patch1001:      0001-Don-t-ignore-.-configure-it-s-a-real-git-file.patch
@@ -125,7 +125,6 @@ rm -rf `find -name .cvsignore`
 
 %build
 %setup_compile_flags
-export bytecclinkopts="%{ldflags}"
 %ifarch alpha
 echo %{optflags} | grep -q mieee || { echo "on alpha you need -mieee to compile ocaml"; exit 1; }
 %endif
