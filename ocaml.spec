@@ -125,7 +125,7 @@ rm -rf `find -name .cvsignore`
 
 %build
 %setup_compile_flags
-export LINKFLAGS="%{ldflags}"
+export bytecclinkopts="%{ldflags}"
 %ifarch alpha
 echo %{optflags} | grep -q mieee || { echo "on alpha you need -mieee to compile ocaml"; exit 1; }
 %endif
