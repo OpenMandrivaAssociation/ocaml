@@ -1,5 +1,5 @@
 --- ocaml-4.02.1/configure	2014-10-03 19:25:46.000000000 +0000
-+++ ocaml-4.02.1/configure.tpg	2015-11-16 22:13:40.120167834 +0000
++++ ocaml-4.02.1/configure.tpg	2015-11-17 18:51:02.912029193 +0000
 @@ -306,8 +306,8 @@
  bytecc="$cc"
  mkexe="\$(BYTECC)"
@@ -175,18 +175,16 @@
  fi
  
 -nativecccompopts=''
--nativecclinkopts=''
 +nativecccompopts="${CFLAGS}"
-+nativecclinkopts="${LDFLAGS}"
+ nativecclinkopts=''
  # FIXME the naming of nativecclinkopts is broken: these are options for
  # ld (for shared libs), not for cc
  nativeccrpath="$byteccrpath"
  
  case "$arch,$nativecc,$system,$target" in
 -  *,*,nextstep,*)      nativecccompopts="$gcc_warnings -U__GNUC__ -posix"
--                       nativecclinkopts="-posix";;
 +  *,*,nextstep,*)      nativecccompopts="$nativecccompopts $gcc_warnings -U__GNUC__ -posix"
-+                       nativecclinkopts="$nativecclinkopts -posix";;
+                        nativecclinkopts="-posix";;
    *,*,rhapsody,*darwin[1-5].*)
 -                       nativecccompopts="$gcc_warnings -DSHRINKED_GNUC";;
 -  *,*,rhapsody,*)      nativecccompopts="$gcc_warnings -DDARWIN_VERSION_6 $dl_defs"
