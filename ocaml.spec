@@ -5,6 +5,11 @@
 %define major	4.06
 %define minor	0
 
+%ifarch %{ix86}
+# On x86_32, -fomit-frame-pointer and -pg are mutually exclusive
+%global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g')
+%endif
+
 %bcond_with emacs
 
 Summary:	The Objective Caml compiler and programming environment
