@@ -2,42 +2,34 @@
 %define _disable_lto 1
 %define build_ocamlopt	1
 %define build_labltk	1
-%define major	4.02
-%define minor	1
+%define major	4.06
+%define minor	0
 
 %bcond_with emacs
 
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	14
+Release:	1
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
-Url:		http://caml.inria.fr
+Url:		http://ocaml.org/
 Source0:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{version}.tar.gz
 Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman-html.tar.gz
 Source3:	ocaml.rpmlintrc
+Source4:	https://src.fedoraproject.org/rpms/ocaml-srpm-macros/raw/master/f/macros.ocaml-srpm
 
 Patch0:		ocaml-3.11.0-ocamltags-no-site-start.patch
-Patch1:		ocaml-3.11.0-no-opt-for-debug-and-profile.patch
 Patch2:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
 Patch4:		ocaml-4.02.1-respect-cflags-ldflags.patch
 
 # fedora
-Patch1001:      0001-Don-t-ignore-.-configure-it-s-a-real-git-file.patch
-Patch1002:      0002-Ensure-empty-compilerlibs-directory-is-created-by-gi.patch
-Patch1003:      0003-Don-t-add-rpaths-to-libraries.patch
-Patch1004:      0004-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
-Patch1006:      0006-Add-support-for-ppc64.patch
-Patch1007:      0007-ppc64-Update-for-OCaml-4.02.0.patch
-Patch1008:      0008-Add-support-for-ppc64le.patch
-Patch1009:      0009-ppc64le-Update-for-OCaml-4.02.0.patch
-Patch1010:      0010-arm-arm64-Mark-stack-as-non-executable.patch
-Patch1011:      0011-arg-Add-no_arg-and-get_arg-helper-functions.patch
-Patch1012:      0012-arg-Allow-flags-such-as-flag-arg-as-well-as-flag-arg.patch
-Patch1013:      0013-PR-6517-use-ISO-C99-types-u-int-32-64-_t-in-preferen.patch
-Patch1014:      0014-ppc-ppc64-ppc64le-Mark-stack-as-non-executable.patch
-Patch1015:      0015-ppc64-ppc64le-proc-Interim-definitions-for-op_is_pur.patch
+Patch1000:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0001-Don-t-add-rpaths-to-libraries.patch
+Patch1001:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0002-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
+Patch1002:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0003-configure-Allow-user-defined-C-compiler-flags.patch
+Patch1003:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0004-Add-RISC-V-backend.patch
+Patch1004:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0005-Copyright-untabify.patch
+Patch1005:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0006-fix-caml_c_call-reload-caml_young_limit.patch
 
 BuildRequires:	db-devel
 BuildRequires:	pkgconfig(ncurses)
@@ -207,10 +199,21 @@ mv %{buildroot}%{_prefix}/src/%{name}-%{version} %{buildroot}%{_prefix}/src/%{na
 install -d %{buildroot}%{_includedir}
 ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 
+# Fix bogus executable permissions
+find %{buildroot} -name "*.ml" |xargs chmod 0644
+
+# We copy the Fedora macros file for compatibility, but then we add our own
+# (more useful) set of macros...
+install -D -m 644 %{S:4} %{buildroot}%{_prefix}/lib/rpm/macros.d/macros.ocaml
+cat >>%{buildroot}%{_prefix}/lib/rpm/macros.d/macros.ocaml <<EOF
+
+%%ocaml_sitelib %%(if [ -x /usr/bin/ocamlc ]; then ocamlc -where;fi)/site-lib
+EOF
+
 %files
 
 %files compiler -f %{name}.list
-%doc Changes LICENSE README
+%doc Changes LICENSE
 %{_includedir}/caml
 %{_mandir}/man1/*
 %{_datadir}/applications/*
@@ -219,6 +222,7 @@ ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 %config(noreplace) %{_sysconfdir}/emacs/site-start.d/*
 %endif
 %exclude %{_libdir}/ocaml/compiler-libs
+%{_prefix}/lib/rpm/macros.d/macros.ocaml
 
 %files doc
 %doc htmlman/* 
@@ -230,6 +234,7 @@ ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 %endif
 %{_libdir}/ocaml/graphics.cma
 %{_libdir}/ocaml/graphics.cmi
+%{_libdir}/ocaml/graphics.cmti
 %if %{build_ocamlopt}
 %{_libdir}/ocaml/graphics.cmx
 %{_libdir}/ocaml/graphics.cmxa
@@ -240,6 +245,7 @@ ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 %{_libdir}/ocaml/stublibs/dllgraphics.so
 #% dir %{_libdir}/ocaml/graphics
 %{_libdir}/ocaml/graphicsX11.cmi
+%{_libdir}/ocaml/graphicsX11.cmti
 %if %{build_ocamlopt}
 %{_libdir}/ocaml/graphicsX11.cmx
 %endif
@@ -253,6 +259,9 @@ ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
 %{_libdir}/ocaml/compiler-libs/*.cmi
 %{_libdir}/ocaml/compiler-libs/*.cmo
 %{_libdir}/ocaml/compiler-libs/*.cma
+%{_libdir}/ocaml/compiler-libs/*.cmt
+%{_libdir}/ocaml/compiler-libs/*.cmti
+%{_libdir}/ocaml/compiler-libs/*.mli
 %if %{build_ocamlopt}
 %{_libdir}/ocaml/compiler-libs/*.a
 %{_libdir}/ocaml/compiler-libs/*.cmxa

@@ -1,1 +1,3 @@
 addFilter("E: devel-file-in-non-devel-package")
+addFilter("E: zero-length")
+addFilter("E: non-executable-script")
