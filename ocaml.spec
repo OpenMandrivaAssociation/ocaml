@@ -50,12 +50,8 @@ Requires: %{name}-compiler = %{EVRD}
 Requires: %{name}-compiler-libs = %{EVRD}
 
 %description
-Objective Caml is a high-level, strongly-typed, functional and object-oriented
+OCaml is a high-level, strongly-typed, functional and object-oriented
 programming language from the ML family of languages.
-
-This package comprises two batch compilers (a fast bytecode compiler and an
-optimizing native-code compiler), an interactive toplevel system, Lex&Yacc
-tools, a replay debugger, and a comprehensive library.
 
 %package	compiler
 Summary:	Compiler and Runtime for OCaml
@@ -64,11 +60,19 @@ Provides:	%{_bindir}/ocamlrun %{version}
 Requires:	%{name}-compiler = %{version}
 Conflicts:	ocaml < 4.01.0-5
 
+%description compiler
+This package comprises two batch OCaml compilers (a fast byte-code compiler and
+an optimizing native-code compiler), an interactive top-level system, Lex&Yacc
+tools, a replay debugger, and a comprehensive library.
+
 %package	doc
 Summary:	Documentation for OCaml
 Group:		Development/Other
 BuildArch:	noarch
 Requires:	%{name}-compiler = %{version}
+
+%description	doc
+Documentation for OCaml
 
 %package x11
 Summary:	X11 library for OCaml
@@ -78,6 +82,9 @@ Requires:	pkgconfig(x11)
 # 2012-07-14: conflict for upgrade (when the x11 subpackage is created)
 Conflicts:	ocaml < 4.01.0-5
 
+%description x11
+X11 library for OCaml.
+
 %package sources
 Summary:	OCaml sources
 Group:		Development/Other
@@ -85,29 +92,14 @@ BuildArch:	noarch
 # don't add crazy deps
 AutoReqProv: No
 
+%description sources
+OCaml sources
+
 %package compiler-libs
 Summary:	OCaml compiler library
 Group:		Development/Other
 Requires:	%{name}-compiler = %{version}
 Conflicts:	%{name} < 4.01.0-5
-
-%description
-OCaml is a high-level, strongly-typed, functional and object-oriented
-programming language from the ML family of languages.
-
-%description compiler
-This package comprises two batch OCaml compilers (a fast byte-code compiler and
-an optimizing native-code compiler), an interactive top-level system, Lex&Yacc
-tools, a replay debugger, and a comprehensive library.
-
-%description	doc
-Documentation for OCaml
-
-%description x11
-X11 library for OCaml.
-
-%description sources
-OCaml sources
 
 %description compiler-libs
 This package contains several modules used internally by the OCaml
