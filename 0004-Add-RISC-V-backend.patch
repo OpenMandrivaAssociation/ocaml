@@ -1,18 +1,18 @@
-From e70b3f9a27786cbec2346e205933b7104a68c0d9 Mon Sep 17 00:00:00 2001
+From 38ac4778744fb7137e04708998d4e856ada1c8b8 Mon Sep 17 00:00:00 2001
 From: Nicolas Ojeda Bar <n.oje.bar@gmail.com>
 Date: Fri, 27 Oct 2017 17:05:25 +0200
-Subject: [PATCH 4/6] Add RISC-V backend
+Subject: [PATCH 4/8] Add RISC-V backend
 
 ---
  README.adoc                 |   1 +
- asmcomp/riscv/CSE.ml        |  36 +++
- asmcomp/riscv/arch.ml       |  87 ++++++
- asmcomp/riscv/emit.mlp      | 653 ++++++++++++++++++++++++++++++++++++++++++++
- asmcomp/riscv/proc.ml       | 301 ++++++++++++++++++++
- asmcomp/riscv/reload.ml     |  16 ++
+ asmcomp/riscv/CSE.ml        |  36 ++
+ asmcomp/riscv/arch.ml       |  87 +++++
+ asmcomp/riscv/emit.mlp      | 653 ++++++++++++++++++++++++++++++++++++
+ asmcomp/riscv/proc.ml       | 301 +++++++++++++++++
+ asmcomp/riscv/reload.ml     |  16 +
  asmcomp/riscv/scheduling.ml |  19 ++
- asmcomp/riscv/selection.ml  |  72 +++++
- asmrun/riscv.S              | 424 ++++++++++++++++++++++++++++
+ asmcomp/riscv/selection.ml  |  72 ++++
+ asmrun/riscv.S              | 424 +++++++++++++++++++++++
  byterun/caml/stack.h        |   5 +
  config/gnu/config.guess     |   5 +-
  configure                   |   5 +-
@@ -27,10 +27,10 @@ Subject: [PATCH 4/6] Add RISC-V backend
  create mode 100644 asmrun/riscv.S
 
 diff --git a/README.adoc b/README.adoc
-index 34ca38a06..85b6d0dce 100644
+index 74d1ec258..ac6c6eac3 100644
 --- a/README.adoc
 +++ b/README.adoc
-@@ -45,6 +45,7 @@ AMD64::              FreeBSD, OpenBSD, NetBSD
+@@ -47,6 +47,7 @@ AMD64::              FreeBSD, OpenBSD, NetBSD
  IA32 (Pentium)::     NetBSD, OpenBSD, Solaris 9
  PowerPC::            NetBSD
  ARM::                NetBSD
@@ -1734,10 +1734,10 @@ index b79252d6b..8335398b2 100755
  	echo ${UNAME_MACHINE}-ibm-linux-${LIBC}
  	exit ;;
 diff --git a/configure b/configure
-index 9311589cf..b0c3b9fc6 100755
+index 53f45f85b..cf5a4a02a 100755
 --- a/configure
 +++ b/configure
-@@ -922,6 +922,7 @@ if $with_sharedlibs; then
+@@ -928,6 +928,7 @@ if $with_sharedlibs; then
      arm*-*-freebsd*)              natdynlink=true;;
      earm*-*-netbsd*)              natdynlink=true;;
      aarch64-*-linux*)             natdynlink=true;;
@@ -1745,7 +1745,7 @@ index 9311589cf..b0c3b9fc6 100755
    esac
  fi
  
-@@ -996,6 +997,8 @@ case "$target" in
+@@ -1004,6 +1005,8 @@ case "$target" in
    x86_64-*-mingw*)              arch=amd64; system=mingw;;
    aarch64-*-linux*)             arch=arm64; system=linux;;
    x86_64-*-cygwin*)             arch=amd64; system=cygwin;;
@@ -1754,7 +1754,7 @@ index 9311589cf..b0c3b9fc6 100755
  esac
  
  # Some platforms exist both in 32-bit and 64-bit variants, not distinguished
-@@ -1054,7 +1057,7 @@ case "$arch,$system" in
+@@ -1062,7 +1065,7 @@ case "$arch,$system" in
                    aspp="${TOOLPREF}cc -c";;
    *,freebsd)      as="${TOOLPREF}as"
                    aspp="${TOOLPREF}cc -c";;
@@ -1764,5 +1764,5 @@ index 9311589cf..b0c3b9fc6 100755
                    case "$ccfamily" in
                        clang-*)
 -- 
-2.13.2
+2.17.1
 

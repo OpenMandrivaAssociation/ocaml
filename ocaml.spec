@@ -2,7 +2,7 @@
 %define _disable_lto 1
 %define build_ocamlopt	1
 %define build_labltk	1
-%define major	4.06
+%define major	4.07
 %define minor	0
 
 %ifarch %{ix86}
@@ -19,7 +19,7 @@ Release:	2
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://ocaml.org/
-Source0:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{version}.tar.gz
+Source0:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{version}.tar.xz
 Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman-html.tar.gz
 Source3:	ocaml.rpmlintrc
 Source4:	https://src.fedoraproject.org/rpms/ocaml-srpm-macros/raw/master/f/macros.ocaml-srpm

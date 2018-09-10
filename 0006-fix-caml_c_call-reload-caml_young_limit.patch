@@ -1,7 +1,7 @@
-From c730a434f509fa31b6cb2c89cabb7a740c63b8a2 Mon Sep 17 00:00:00 2001
+From 207fbbc2616ee44e048dd5bb133e52f252cd1caf Mon Sep 17 00:00:00 2001
 From: Nicolas Ojeda Bar <n.oje.bar@gmail.com>
 Date: Sat, 2 Dec 2017 10:44:41 +0100
-Subject: [PATCH 6/6] fix caml_c_call: reload caml_young_limit
+Subject: [PATCH 6/8] fix caml_c_call: reload caml_young_limit
 
 ---
  asmrun/riscv.S | 2 +-
@@ -21,5 +21,5 @@ index 88d7ab924..121f8ba71 100644
          jr      s2
          .size   caml_c_call, .-caml_c_call
 -- 
-2.13.2
+2.17.1
 

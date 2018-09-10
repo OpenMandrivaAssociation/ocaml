@@ -1,10 +1,10 @@
-From ebdebcab48818b19ef45e0cc8cdd89ae1cfc522f Mon Sep 17 00:00:00 2001
+From 2e4038b6b8073f55012613f18cb19a4c99e8219d Mon Sep 17 00:00:00 2001
 From: Nicolas Ojeda Bar <n.oje.bar@gmail.com>
 Date: Fri, 1 Dec 2017 14:39:46 +0100
-Subject: [PATCH 5/6] Copyright, untabify
+Subject: [PATCH 5/8] Copyright, untabify
 
 ---
- asmrun/riscv.S | 608 ++++++++++++++++++++++++++++-----------------------------
+ asmrun/riscv.S | 608 ++++++++++++++++++++++++-------------------------
  1 file changed, 304 insertions(+), 304 deletions(-)
 
 diff --git a/asmrun/riscv.S b/asmrun/riscv.S
@@ -713,5 +713,5 @@ index a82048efc..88d7ab924 100644
 +        .align  3
 +        .size   caml_system__frametable, .-caml_system__frametable
 -- 
-2.13.2
+2.17.1
 
