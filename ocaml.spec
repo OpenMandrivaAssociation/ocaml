@@ -15,7 +15,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	4
+Release:	5
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://ocaml.org/
@@ -89,8 +89,6 @@ X11 library for OCaml.
 Summary:	OCaml sources
 Group:		Development/Other
 BuildArch:	noarch
-# don't add crazy deps
-AutoReqProv: No
 
 %description sources
 OCaml sources
@@ -100,6 +98,7 @@ Summary:	OCaml compiler library
 Group:		Development/Other
 Requires:	%{name}-compiler = %{version}
 Conflicts:	%{name} < 4.01.0-5
+Provides:	ocaml(runtime) = 4.07.0
 
 %description compiler-libs
 This package contains several modules used internally by the OCaml
