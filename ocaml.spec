@@ -109,9 +109,7 @@ compilers.  They are not needed for normal OCaml development, but may
 be helpful in the development of certain applications.
 
 %prep
-%setup -q -T -b 0
-%setup -q -T -D -a 1
-%apply_patches
+%autosetup -p1 -T -b 0
 
 # Fix a couple of bogus paths in scripts that
 # get packaged
@@ -128,8 +126,18 @@ sed -i -e 's,/usr/bin/cat,/bin/cat,g' \
 %config_update
 
 # delete backup files to be sure that they don't end up in package
-find -name \*.00??~ -delete
+find -name \*.*~ -delete
 rm -rf `find -name .cvsignore`
+
+# Package sources now so the -sources package
+# gets all our patches (but not any built
+# binaries or refman bits)
+cd ..
+tar cf sources.tar %{name}-%{version}
+mv sources.tar %{name}-%{version}/
+cd -
+
+%setup -q -T -D -a 1
 
 %build
 %setup_compile_flags
@@ -208,7 +216,7 @@ EOF
 
 # install sources
 install -d -m 755 %{buildroot}%{_prefix}/src
-tar xvjf %{SOURCE0} -C %{buildroot}%{_prefix}/src
+tar xvf sources.tar -C %{buildroot}%{_prefix}/src
 mv %{buildroot}%{_prefix}/src/%{name}-%{version} %{buildroot}%{_prefix}/src/%{name}
 install -d %{buildroot}%{_includedir}
 ln -s %{_libdir}/ocaml/caml %{buildroot}%{_includedir}/
