@@ -36,6 +36,9 @@ Patch1003:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0004-Add-RISC-V
 Patch1004:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0005-Copyright-untabify.patch
 Patch1005:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0006-fix-caml_c_call-reload-caml_young_limit.patch
 
+# Additional RISC-V patches from https://github.com/nojb/riscv-ocaml
+Patch1500:	https://github.com/nojb/riscv-ocaml/commit/20b4961970d4d5bcef4fc9f449dd7ad9ebc11d66.patch
+
 BuildRequires:	db-devel
 BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(tcl)
@@ -109,6 +112,11 @@ be helpful in the development of certain applications.
 %setup -q -T -b 0
 %setup -q -T -D -a 1
 %apply_patches
+
+# Make sure config/gnu/config.sub knows what a
+# riscv64-openmandriva-linux-gnu target is
+%config_update
+
 # delete backup files to be sure that they don't end up in package
 find -name \*.00??~ -delete
 rm -rf `find -name .cvsignore`
