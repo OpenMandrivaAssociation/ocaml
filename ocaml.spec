@@ -15,7 +15,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	5
+Release:	6
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://ocaml.org/
@@ -112,6 +112,16 @@ be helpful in the development of certain applications.
 %setup -q -T -b 0
 %setup -q -T -D -a 1
 %apply_patches
+
+# Fix a couple of bogus paths in scripts that
+# get packaged
+sed -i -e 's,/usr/local/bin/perl,%{__perl},g' \
+	manual/tools/htmlcut \
+	manual/tools/texexpand \
+	manual/tools/htmltbl \
+	manual/tools/htmlthread
+sed -i -e 's,/usr/bin/cat,/bin/cat,g' \
+	config/auto-aux/hashbang2
 
 # Make sure config/gnu/config.sub knows what a
 # riscv64-openmandriva-linux-gnu target is
