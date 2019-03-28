@@ -157,7 +157,7 @@ echo %{optflags} | grep -q mieee || { echo "on alpha you need -mieee to compile 
 
 CFLAGS="%{optflags}" LDFLAGS="%{ldflags}" ./configure \
     -bindir %{_bindir} \
-    -host %{_host} \
+    -host %{_target_platform} \
     -cc "%{__cc}" \
     -as "%{__as}" \
     -libdir %{_libdir}/ocaml \
