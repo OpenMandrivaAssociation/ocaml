@@ -1,0 +1,12 @@
+diff -up ocaml-4.07.0/tools/ocamlmklib.ml.omv~ ocaml-4.07.0/tools/ocamlmklib.ml
+--- ocaml-4.07.0/tools/ocamlmklib.ml.omv~	2019-03-28 21:00:46.383368917 +0100
++++ ocaml-4.07.0/tools/ocamlmklib.ml	2019-03-28 21:00:59.537405552 +0100
+@@ -268,7 +268,7 @@ let build_libs () =
+   if !c_objs <> [] then begin
+     if !dynlink then begin
+       let retcode = command
+-          (Printf.sprintf "%s %s -o %s %s %s %s %s %s %s"
++          (Printf.sprintf "%s %s -o %s %s %s %s -flto -Wl,-O2 %s %s %s"
+              Config.mkdll
+              (if !debug then "-g" else "")
+              (prepostfix "dll" !output_c Config.ext_dll)

@@ -5,10 +5,8 @@
 %define major	4.07
 %define minor	0
 
-%ifarch %{ix86}
-# On x86_32, -fomit-frame-pointer and -pg are mutually exclusive
+# -fomit-frame-pointer and -pg are mutually exclusive (and ocaml adds the latter)
 %global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g')
-%endif
 
 %bcond_with emacs
 %bcond_with bootstrap
@@ -16,7 +14,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	7
+Release:	8
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://ocaml.org/
@@ -27,6 +25,7 @@ Source4:	https://src.fedoraproject.org/rpms/ocaml-srpm-macros/raw/master/f/macro
 
 Patch0:		ocaml-3.11.0-ocamltags-no-site-start.patch
 Patch2:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
+Patch3:		ocaml-4.07.0-lto.patch
 Patch4:		ocaml-4.02.1-respect-cflags-ldflags.patch
 
 # fedora
@@ -156,7 +155,7 @@ cd -
 echo %{optflags} | grep -q mieee || { echo "on alpha you need -mieee to compile ocaml"; exit 1; }
 %endif
 
-./configure \
+CFLAGS="%{optflags}" LDFLAGS="%{ldflags}" ./configure \
     -bindir %{_bindir} \
     -host %{_host} \
     -cc "%{__cc}" \
@@ -166,7 +165,7 @@ echo %{optflags} | grep -q mieee || { echo "on alpha you need -mieee to compile 
     -x11include %{_includedir} \
     -mandir %{_mandir}/man1
 
-make world
+make world.opt
 %if %{build_ocamlopt}
 make opt opt.opt
 %endif
