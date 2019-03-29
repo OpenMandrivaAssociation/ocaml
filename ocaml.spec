@@ -72,6 +72,9 @@ Group:		Development/Other
 Provides:	%{_bindir}/ocamlrun %{version}
 Requires:	%{name}-compiler = %{version}
 Conflicts:	ocaml < 4.01.0-5
+# FIXME this is an EVIL workaround for the dependency generator
+# getting things wrong
+Provides:	ocaml(runtime) = 4.06.0
 
 %description compiler
 This package comprises two batch OCaml compilers (a fast byte-code compiler and
