@@ -6,7 +6,7 @@
 %define minor	0
 
 # -fomit-frame-pointer and -pg are mutually exclusive (and ocaml adds the latter)
-%global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g')
+%global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g') -fcommon
 
 %bcond_with emacs
 %bcond_with bootstrap
