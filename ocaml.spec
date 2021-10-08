@@ -9,7 +9,7 @@
 %global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g') -fcommon
 
 %bcond_with emacs
-%bcond_with bootstrap
+%bcond_without bootstrap
 
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
