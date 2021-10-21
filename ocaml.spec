@@ -6,15 +6,15 @@
 %define minor	0
 
 # -fomit-frame-pointer and -pg are mutually exclusive (and ocaml adds the latter)
-%global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g') -fcommon
+%global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g') -O2 -fcommon
 
 %bcond_with emacs
-%bcond_without bootstrap
+%bcond_with bootstrap
 
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	8
+Release:	9
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://ocaml.org/
