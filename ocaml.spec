@@ -35,7 +35,9 @@ Patch1002:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0003-configure-
 Patch1003:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0004-Add-RISC-V-backend.patch
 Patch1004:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0005-Copyright-untabify.patch
 Patch1005:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0006-fix-caml_c_call-reload-caml_young_limit.patch
+
 Patch1006:	ocaml-SIGSTKSZ.patch
+Patch1007:	ocaml-4.07.0-fix-clang.patch
 
 # Additional RISC-V patches from https://github.com/nojb/riscv-ocaml
 Patch1500:	https://github.com/nojb/riscv-ocaml/commit/20b4961970d4d5bcef4fc9f449dd7ad9ebc11d66.patch
