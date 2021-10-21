@@ -1,12 +1,12 @@
 %define _disable_ld_no_undefined 1
 %define _disable_lto 1
-%define build_ocamlopt	1
-%define build_labltk	1
-%define major	4.07
-%define minor	0
+%define build_ocamlopt 1
+%define build_labltk 1
+%define major 4.07
+%define minor 0
 
 # -fomit-frame-pointer and -pg are mutually exclusive (and ocaml adds the latter)
-%global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g') -O2 -fcommon
+%global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g') -fcommon
 
 %bcond_with emacs
 %bcond_with bootstrap
@@ -35,6 +35,7 @@ Patch1002:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0003-configure-
 Patch1003:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0004-Add-RISC-V-backend.patch
 Patch1004:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0005-Copyright-untabify.patch
 Patch1005:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0006-fix-caml_c_call-reload-caml_young_limit.patch
+Patch1006:	ocaml-SIGSTKSZ.patch
 
 # Additional RISC-V patches from https://github.com/nojb/riscv-ocaml
 Patch1500:	https://github.com/nojb/riscv-ocaml/commit/20b4961970d4d5bcef4fc9f449dd7ad9ebc11d66.patch
@@ -59,14 +60,14 @@ BuildRequires:	emacs
 BuildRequires:	%{name}-compiler
 %endif
 
-Requires: %{name}-compiler = %{EVRD}
-Requires: %{name}-compiler-libs = %{EVRD}
+Requires:	%{name}-compiler = %{EVRD}
+Requires:	%{name}-compiler-libs = %{EVRD}
 
 %description
 OCaml is a high-level, strongly-typed, functional and object-oriented
 programming language from the ML family of languages.
 
-%package	compiler
+%package compiler
 Summary:	Compiler and Runtime for OCaml
 Group:		Development/Other
 Provides:	%{_bindir}/ocamlrun %{version}
@@ -81,14 +82,14 @@ This package comprises two batch OCaml compilers (a fast byte-code compiler and
 an optimizing native-code compiler), an interactive top-level system, Lex&Yacc
 tools, a replay debugger, and a comprehensive library.
 
-%package	doc
+%package doc
 Summary:	Documentation for OCaml
 Group:		Development/Other
 BuildArch:	noarch
 Requires:	%{name}-compiler = %{version}
 
-%description	doc
-Documentation for OCaml
+%description doc
+Documentation for OCaml.
 
 %package x11
 Summary:	X11 library for OCaml
@@ -107,7 +108,7 @@ Group:		Development/Other
 BuildArch:	noarch
 
 %description sources
-OCaml sources
+OCaml sources.
 
 %package compiler-libs
 Summary:	OCaml compiler library
@@ -153,7 +154,7 @@ cd -
 %setup -q -T -D -a 1
 
 %build
-%setup_compile_flags
+%set_build_flags
 %ifarch alpha
 echo %{optflags} | grep -q mieee || { echo "on alpha you need -mieee to compile ocaml"; exit 1; }
 %endif
@@ -250,7 +251,7 @@ EOF
 %files compiler -f %{name}.list
 %doc Changes LICENSE
 %{_includedir}/caml
-%{_mandir}/man1/*
+%doc %{_mandir}/man1/*
 %{_datadir}/applications/*
 %if %{with emacs}
 %{_datadir}/emacs/site-lisp/*

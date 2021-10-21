@@ -1,0 +1,29 @@
+diff -Naur ocaml-4.07.0/asmrun/signals_asm.c ocaml-4.07.0.tpg/asmrun/signals_asm.c
+--- ocaml-4.07.0/asmrun/signals_asm.c	2018-07-10 14:09:26.000000000 +0000
++++ ocaml-4.07.0.tpg/asmrun/signals_asm.c	2021-10-21 16:44:23.658055500 +0000
+@@ -182,7 +182,6 @@
+ #ifdef HAS_STACK_OVERFLOW_DETECTION
+ 
+ static char * system_stack_top;
+-static char sig_alt_stack[SIGSTKSZ];
+ 
+ #if defined(SYS_linux)
+ /* PR#4746: recent Linux kernels with support for stack randomization
+@@ -275,14 +274,16 @@
+   {
+     stack_t stk;
+     struct sigaction act;
+-    stk.ss_sp = sig_alt_stack;
++    stk.ss_sp = malloc(SIGSTKSZ);
+     stk.ss_size = SIGSTKSZ;
+     stk.ss_flags = 0;
+     SET_SIGACT(act, segv_handler);
+     act.sa_flags |= SA_ONSTACK | SA_NODEFER;
+     sigemptyset(&act.sa_mask);
+     system_stack_top = (char *) &act;
++    if (stk.ss_sp) {
+     if (sigaltstack(&stk, NULL) == 0) { sigaction(SIGSEGV, &act, NULL); }
++    }
+   }
+ #endif
+ }
