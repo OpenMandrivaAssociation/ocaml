@@ -2,19 +2,18 @@
 %define _disable_lto 1
 %define build_ocamlopt 1
 %define build_labltk 1
-%define major 4.07
+%define major 4.14
 %define minor 0
 
 # -fomit-frame-pointer and -pg are mutually exclusive (and ocaml adds the latter)
 %global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g') -fcommon
 
-%bcond_with emacs
 %bcond_with bootstrap
 
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	%{major}.%{minor}
-Release:	9
+Release:	1
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://ocaml.org/
@@ -23,34 +22,45 @@ Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman
 Source3:	ocaml.rpmlintrc
 Source4:	https://src.fedoraproject.org/rpms/ocaml-srpm-macros/raw/master/f/macros.ocaml-srpm
 
-Patch0:		ocaml-3.11.0-ocamltags-no-site-start.patch
-Patch2:		ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
-Patch3:		ocaml-4.07.0-lto.patch
-Patch4:		ocaml-4.02.1-respect-cflags-ldflags.patch
-
 # fedora
-Patch1000:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0001-Don-t-add-rpaths-to-libraries.patch
-Patch1001:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0002-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
-Patch1002:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0003-configure-Allow-user-defined-C-compiler-flags.patch
-Patch1003:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0004-Add-RISC-V-backend.patch
-Patch1004:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0005-Copyright-untabify.patch
-Patch1005:	https://src.fedoraproject.org/rpms/ocaml/raw/master/f/0006-fix-caml_c_call-reload-caml_young_limit.patch
+Patch1000:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0001-Do-not-trigger-warning-when-calling-virtual-methods-.patch
+Patch1001:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0002-Merge-pull-request-11236-from-Nymphium-missing-since.patch
+Patch1002:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0003-misc.h-fix-preprocessor-conditional-on-_MSC_VER.patch
+Patch1003:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0004-Changes.patch
+Patch1004:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0005-Guard-more-instances-of-undefined-_MSC_VER.patch
+Patch1005:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0006-Better-documentation-for-string_of_float-.-11353.patch
+Patch1006:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0007-Merge-pull-request-11380-from-damiendoligez-fix-fort.patch
+Patch1007:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0008-Refactor-the-initialization-of-bytecode-threading-11.patch
+Patch1008:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0009-Merge-pull-request-11397-from-Octachron-tast_mapper_.patch
+Patch1009:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0010-Merge-pull-request-11396-from-gasche-fix11392.patch
+Patch1010:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0011-Document-limitation-on-caml_callbackN-11409.patch
+Patch1011:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0012-Stop-calling-ranlib-on-created-installed-libraries-1.patch
+Patch1012:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0013-tests-lib-bigarray-2-has-gfortran.sh-don-t-print-any.patch
+Patch1013:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0014-Merge-pull-request-11417-from-lpw25-fix-virtual-clas.patch
+Patch1014:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0015-Do-not-elide-the-whole-module-type-error-message-114.patch
+Patch1015:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0016-Merge-pull-request-11373-from-dra27-flexlink-detect.patch
+Patch1016:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0017-Merge-pull-request-11468-from-dra27-i686-mingw-ipv6.patch
+Patch1017:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0018-More-prudent-deallocation-of-alternate-signal-stack-.patch
+Patch1018:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0019-Merge-pull-request-11487-from-purplearmadillo77-fma_.patch
+Patch1019:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0020-Fixup-Changes.patch
+Patch1020:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0021-Fix-deprecated_mutable-which-couldn-t-be-triggered.-.patch
+Patch1021:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0022-Don-t-add-rpaths-to-libraries.patch
+Patch1022:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0023-configure-Allow-user-defined-C-compiler-flags.patch
+Patch1023:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0024-configure-Only-use-OC_-for-building-executables.patch
 
-Patch1006:	ocaml-SIGSTKSZ.patch
-Patch1007:	ocaml-4.07.0-fix-clang.patch
+# OMV
+Patch2000:	ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
+Patch2001:	ocaml-4.07.0-lto.patch
+Patch2002:	ocaml-4.02.1-respect-cflags-ldflags.patch
 
 # Additional RISC-V patches from https://github.com/nojb/riscv-ocaml
-Patch1500:	https://github.com/nojb/riscv-ocaml/commit/20b4961970d4d5bcef4fc9f449dd7ad9ebc11d66.patch
+# (currently none)
 
 BuildRequires:	db-devel
 BuildRequires:	pkgconfig(ncurses)
 BuildRequires:	pkgconfig(tcl)
 BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(tk)
-%if %{with emacs}
-BuildRequires:	emacs
-%rename		ocaml-emacs
-%endif
 
 %if ! %{with bootstrap}
 # Not actually used during the build process, but ocamlobjinfo
@@ -64,6 +74,9 @@ BuildRequires:	%{name}-compiler
 
 Requires:	%{name}-compiler = %{EVRD}
 Requires:	%{name}-compiler-libs = %{EVRD}
+
+# Patches contain binary diffs and need to be applied with "git apply"
+%define __scm git
 
 %description
 OCaml is a high-level, strongly-typed, functional and object-oriented
@@ -127,16 +140,6 @@ be helpful in the development of certain applications.
 %prep
 %autosetup -p1 -T -b 0
 
-# Fix a couple of bogus paths in scripts that
-# get packaged
-sed -i -e 's,/usr/local/bin/perl,%{__perl},g' \
-	manual/tools/htmlcut \
-	manual/tools/texexpand \
-	manual/tools/htmltbl \
-	manual/tools/htmlthread
-sed -i -e 's,/usr/bin/cat,/bin/cat,g' \
-	config/auto-aux/hashbang2
-
 # Make sure config/gnu/config.sub knows what a
 # riscv64-openmandriva-linux-gnu target is
 %config_update
@@ -157,53 +160,21 @@ cd -
 
 %build
 %set_build_flags
-%ifarch alpha
-echo %{optflags} | grep -q mieee || { echo "on alpha you need -mieee to compile ocaml"; exit 1; }
-%endif
 
-CFLAGS="%{optflags}" LDFLAGS="%{ldflags}" ./configure \
-    -bindir %{_bindir} \
-    -host %{_target_platform} \
-    -cc "%{__cc}" \
-    -as "%{__as}" \
-    -libdir %{_libdir}/ocaml \
-    -x11lib %{_libdir} \
-    -x11include %{_includedir} \
-    -mandir %{_mandir}/man1
+%configure \
+	--libdir=%{_libdir}/ocaml
 
 make world.opt
 %if %{build_ocamlopt}
 make opt opt.opt
 %endif
-make -C emacs ocamltags
 
 
 %install
-make install \
-	BINDIR=%{buildroot}%{_bindir} \
-	LIBDIR=%{buildroot}%{_libdir}/ocaml \
-	MANDIR=%{buildroot}%{_mandir}
-
-%if %{with emacs}
-cd emacs; make install install-ocamltags \
-	BINDIR=%{buildroot}%{_bindir} \
-	EMACSDIR=%{buildroot}%{_datadir}/emacs/site-lisp; cd -
-%else
-make -C emacs install-ocamltags \
-	BINDIR=%{buildroot}%{_bindir}
-%endif
+%make_install
 
 # fix
-perl -pi -e "s|%{buildroot}||" %{buildroot}%{_libdir}/ocaml/ld.conf
-
-%if %{with emacs}
-install -d %{buildroot}%{_sysconfdir}/emacs/site-start.d
-cat <<EOF >%{buildroot}%{_sysconfdir}/emacs/site-start.d/%{name}.el
-(require 'caml-font)
-(autoload 'caml-mode "caml" "Caml editing mode" t)
-(add-to-list 'auto-mode-alist '("\\\\.mli?$" . caml-mode))
-EOF
-%endif
+sed -i -e "s|%{buildroot}||" %{buildroot}%{_libdir}/ocaml/ld.conf
 
 # don't package mano man pages since we have the html files
 rm -rf %{buildroot}%{_mandir}/mano
@@ -255,39 +226,15 @@ EOF
 %{_includedir}/caml
 %doc %{_mandir}/man1/*
 %{_datadir}/applications/*
-%if %{with emacs}
-%{_datadir}/emacs/site-lisp/*
-%config(noreplace) %{_sysconfdir}/emacs/site-start.d/*
-%endif
 %exclude %{_libdir}/ocaml/compiler-libs
 %{_prefix}/lib/rpm/macros.d/macros.ocaml
 
 %files doc
+%doc %{_docdir}/ocaml/Changes
+%doc %{_docdir}/ocaml/LICENSE
+%doc %{_docdir}/ocaml/README*.adoc
 %doc htmlman/* 
 %{_mandir}/man3/*
-
-%files x11
-%if %{build_ocamlopt}
-%{_libdir}/ocaml/graphics.a
-%endif
-%{_libdir}/ocaml/graphics.cma
-%{_libdir}/ocaml/graphics.cmi
-%{_libdir}/ocaml/graphics.cmti
-%if %{build_ocamlopt}
-%{_libdir}/ocaml/graphics.cmx
-%{_libdir}/ocaml/graphics.cmxa
-%{_libdir}/ocaml/graphics.cmxs
-%endif
-%{_libdir}/ocaml/graphics.mli
-%{_libdir}/ocaml/libgraphics.a
-%{_libdir}/ocaml/stublibs/dllgraphics.so
-#% dir %{_libdir}/ocaml/graphics
-%{_libdir}/ocaml/graphicsX11.cmi
-%{_libdir}/ocaml/graphicsX11.cmti
-%if %{build_ocamlopt}
-%{_libdir}/ocaml/graphicsX11.cmx
-%endif
-%{_libdir}/ocaml/graphicsX11.mli
 
 %files sources
 %{_prefix}/src/%{name}

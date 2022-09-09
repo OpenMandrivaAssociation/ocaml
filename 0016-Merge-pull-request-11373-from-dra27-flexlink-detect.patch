@@ -1,0 +1,57 @@
+From 4d316cbe4b564be3aa57b969acf9ba03910dcba4 Mon Sep 17 00:00:00 2001
+From: David Allsopp <david.allsopp@metastack.com>
+Date: Sat, 30 Jul 2022 11:51:12 +0200
+Subject: [PATCH 16/24] Merge pull request #11373 from dra27/flexlink-detect
+
+Don't use CFLAGS when testing flexlink
+
+(cherry picked from commit 004d313ce4fdb071d0aeda8736b9e74bb6c6a21b)
+---
+ Changes    |   6 ++++++
+ aclocal.m4 |   1 +
+ configure  | Bin 581549 -> 581563 bytes
+ 3 files changed, 7 insertions(+)
+
+diff --git a/Changes b/Changes
+index 6b9855f707..99907b950a 100644
+--- a/Changes
++++ b/Changes
+@@ -1,6 +1,12 @@
+ OCaml 4.14 maintenance branch
+ -----------------------------
+ 
++### Build system:
++
++- #11370, #11373: Don't pass CFLAGS to flexlink during configure.
++  (David Allsopp, report by William Hu, review by Xavier Leroy and
++   Sébastien Hinderer)
++
+ ### Bug fixes:
+ 
+ - #11204: Fix regression introduced in 4.14.0 that would trigger Warning 17 when
+diff --git a/aclocal.m4 b/aclocal.m4
+index 7e49468e48..2bc0a1dcc9 100644
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -328,6 +328,7 @@ AC_DEFUN([OCAML_TEST_FLEXLINK], [
+     CC="$1 -chain $2 -exe"
+     LIBS="conftest2.$ac_objext"
+     CPPFLAGS="$3 $CPPFLAGS"
++    CFLAGS=""
+     AC_LINK_IFELSE(
+       [AC_LANG_SOURCE([int main() { return 0; }])],
+       [AC_MSG_RESULT([yes])],
+diff --git a/configure b/configure
+index 73ce66bfa0a3de5e886a88c973b2db288b5e4d03..c0dde03f183f86677b22a81238defdba60ad0080 100755
+GIT binary patch
+delta 57
+zcmZ3xUwQX_<%Sl<7N!>F7M3lnkFIk%yZJb}2iqzsO&46x?lIl3ot?8??*=OnvjH*t
+KcD)-M_3Qv?gA|zn
+
+delta 47
+zcmdnJUwQ3*<%Sl<7N!>F7M3lnkFHM-Tg~P?U2ZNbN4xb6Rv=~rV)pIUH#i#D0n)${
+AvH$=8
+
+-- 
+2.37.0.rc2
+

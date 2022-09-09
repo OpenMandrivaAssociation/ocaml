@@ -1,0 +1,54 @@
+From a4633757e352b30f136d2a1cda827289d826ddc0 Mon Sep 17 00:00:00 2001
+From: David Allsopp <david.allsopp@metastack.com>
+Date: Thu, 25 Aug 2022 08:44:47 +0100
+Subject: [PATCH 19/24] Merge pull request #11487 from
+ purplearmadillo77/fma_test
+
+Thwart FMA test optimization during configure
+
+(cherry picked from commit cd7dc7f6b9b5353acc2aa70bdc7bbecff56634d0)
+---
+ Changes    |   3 +++
+ aclocal.m4 |   2 +-
+ configure  | Bin 581611 -> 581620 bytes
+ 3 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Changes b/Changes
+index 4d1bb10435..763c0fa4b7 100644
+--- a/Changes
++++ b/Changes
+@@ -7,6 +7,9 @@ OCaml 4.14 maintenance branch
+   (David Allsopp, report by William Hu, review by Xavier Leroy and
+    Sébastien Hinderer)
+ 
++- #11???: Thwart FMA test optimization during configure
++  (William Hu, review by ???)
++
+ ### Bug fixes:
+ 
+ - #11204: Fix regression introduced in 4.14.0 that would trigger Warning 17 when
+diff --git a/aclocal.m4 b/aclocal.m4
+index 2bc0a1dcc9..addb0d8bbf 100644
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -440,7 +440,7 @@ int main (void) {
+      broken implementations of Cygwin64, mingw-w64 (x86_64) and VS2013-2017.
+      The static volatile variables aim to thwart GCC's constant folding. */
+   static volatile double x, y, z;
+-  double t264, t265, t266;
++  volatile double t264, t265, t266;
+   x = 0x3.bd5b7dde5fddap-496;
+   y = 0x3.bd5b7dde5fddap-496;
+   z = -0xd.fc352bc352bap-992;
+diff --git a/configure b/configure
+index 536a1cbee58a430692bfa3de11901e7e2f6b4ee2..1a1dd61863e0435952ba6d6baf8131e68f070b3d 100755
+GIT binary patch
+delta 44
+zcmaF8U-`>^<%Sl<7N!>F7M2#)Eo_r#a+KxgB$j06q_$6*$p*yi+b7NBh;#!0qIVJx
+
+delta 35
+qcmeyeU-|WZ<%Sl<7N!>F7M2#)Eo_r#w$GW#2E^>!=gj1Ya037qBM!s>
+
+-- 
+2.37.0.rc2
+

@@ -1,5 +1,5 @@
---- ocaml-3.04/byterun/printexc.c.pix	Fri Dec  7 14:39:34 2001
-+++ ocaml-3.04/byterun/printexc.c	Tue Mar 19 18:57:07 2002
+--- ocaml-3.04/runtime/printexc.c.pix	Fri Dec  7 14:39:34 2001
++++ ocaml-3.04/runtime/printexc.c	Tue Mar 19 18:57:07 2002
 @@ -32,7 +32,7 @@
  struct stringbuf {
    char * ptr;

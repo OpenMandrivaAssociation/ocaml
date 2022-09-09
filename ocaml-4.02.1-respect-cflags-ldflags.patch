@@ -1,8 +1,9 @@
---- ocaml-4.06.0/configure.0004~	2018-03-02 18:39:15.286070388 +0100
-+++ ocaml-4.06.0/configure	2018-03-02 18:44:00.375083481 +0100
-@@ -416,15 +416,15 @@ esac
+diff -up ocaml-4.14.0/configure.3~ ocaml-4.14.0/configure
+--- ocaml-4.14.0/configure.3~	2022-09-09 02:49:07.419734453 +0200
++++ ocaml-4.14.0/configure	2022-09-09 02:50:42.046990370 +0200
+@@ -2795,14 +2795,14 @@ mkexe="\$(CC) \$(OC_CFLAGS) \$(CFLAGS) \
  
- mkexe="\$(CC) \$(CFLAGS) \$(CPPFLAGS) \$(LDFLAGS)"
+ # Flags for building executable files with debugging symbols
  mkexedebugflag="-g"
 -common_cflags=""
 -common_cppflags=""
@@ -12,37 +13,28 @@
  internal_cppflags=""
  ocamlc_cflags=""
  ocamlc_cppflags=""
- ocamlopt_cflags=""
- ocamlopt_cppflags=""
--ldflags=""
-+ldflags="${LDFLAGS}"
+-oc_ldflags=""
+-oc_dll_ldflags=""
++oc_ldflags="${LDFLAGS}"
++oc_dll_ldflags="${LDFLAGS}"
  ostype="Unix"
- exe=""
- iflexdir=""
-@@ -449,7 +449,7 @@ esac
- 
- case "$ccfamily" in
-   clang-*)
+ SO="so"
+ toolchain="cc"
+@@ -12814,7 +12814,7 @@ esac ;; #(
+   *) :
+     case $ocaml_cv_cc_vendor in #(
+   clang-*) :
 -    common_cflags="-O2 -fno-strict-aliasing -fwrapv";
 +    common_cflags="-O2 -fno-strict-aliasing -fwrapv ${common_cflags}";
-     internal_cflags="$gcc_warnings";;
-   gcc-[012]-*)
+       internal_cflags="$cc_warnings -fno-common" ;; #(
+   gcc-[012]-*) :
      # Some versions known to miscompile OCaml, e,g, 2.7.2.1, some 2.96.
-@@ -467,7 +467,7 @@ case "$ccfamily" in
+@@ -12839,7 +12839,7 @@ $as_echo "$as_me: WARNING: Consider usin
  -fno-builtin-memcmp";
-     internal_cflags="$gcc_warnings";;
-   gcc-*)
+       internal_cflags="$cc_warnings -fexcess-precision=standard" ;; #(
+   gcc-*) :
 -    common_cflags="-O2 -fno-strict-aliasing -fwrapv";
 +    common_cflags="-O2 -fno-strict-aliasing -fwrapv ${common_cflags}";
-     internal_cflags="$gcc_warnings";;
-   *)
-     common_cflags="-O";;
-@@ -500,7 +500,7 @@ case "$cc,$target" in
-       common_cflags="-mieee $common_cflags";
-     fi
-     # Put code and static data in lower 4GB
--    ldflags="-Wl,-T,12000000 -Wl,-D,14000000"
-+    ldflags="${ldflags} -Wl,-T,12000000 -Wl,-D,14000000"
-     # Tell gcc that we can use 32-bit code addresses for threaded code
-     echo "#define ARCH_CODE32" >> m.h;;
-   cc,alpha*-*-osf*)
+       internal_cflags="$cc_warnings -fno-common \
+ -fexcess-precision=standard" ;; #(
+   msvc-*) :

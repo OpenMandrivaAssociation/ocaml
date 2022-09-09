@@ -1,0 +1,327 @@
+From 50fbd6685ec88f1dc81451923d7c80fb0d18ca8b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?S=C3=A9bastien=20Hinderer?= <Sebastien.Hinderer@inria.fr>
+Date: Thu, 14 Apr 2022 19:19:46 +0200
+Subject: [PATCH 12/24] Stop calling ranlib on created / installed libraries
+ (#11184)
+
+`ranlib` seems unnecessary if a POSIX-compliant `ar` is used and time stamps are preserved when a `.a` file is installed.
+
+(cherry picked from commit c8e41bade529998c4e66975c88fabf3ac47d7078)
+---
+ Changes                             |   5 +++++
+ INSTALL.adoc                        |   4 ++--
+ Makefile                            |   2 --
+ Makefile.build_config.in            |   2 +-
+ Makefile.config.in                  |   4 ----
+ configure                           | Bin 581827 -> 581549 bytes
+ configure.ac                        |  16 +++-------------
+ otherlibs/Makefile.otherlibs.common |   2 --
+ otherlibs/dynlink/Makefile          |  11 +++++------
+ otherlibs/systhreads/Makefile       |   3 ---
+ stdlib/Makefile                     |   1 -
+ tools/ocamlmklib.ml                 |   6 ++----
+ utils/Makefile                      |   1 -
+ utils/ccomp.ml                      |   8 ++------
+ utils/config.mli                    |   3 ---
+ utils/config.mlp                    |   2 --
+ 16 files changed, 20 insertions(+), 50 deletions(-)
+
+diff --git a/Changes b/Changes
+index 13eb7fef98..6f92ee9965 100644
+--- a/Changes
++++ b/Changes
+@@ -25,6 +25,11 @@ OCaml 4.14 maintenance branch
+ - #11392, #11392: assertion failure with -rectypes and external definitions
+   (Gabriel Scherer, review by Florian Angeletti, report by Dmitrii Kosarev)
+ 
++### Compiler user-interface and warnings:
++
++- #11184: Stop calling ranlib on created / installed libraries
++  (Sébastien Hinderer, review by Xavier Leroy)
++
+ ### Manual and documentation:
+ 
+ - #11045, #11409: document that the array argument to `caml_callbackN`
+diff --git a/INSTALL.adoc b/INSTALL.adoc
+index f4199ca49a..08d67ebbbe 100644
+--- a/INSTALL.adoc
++++ b/INSTALL.adoc
+@@ -43,8 +43,8 @@
+ * Under Cygwin, the `gcc-core` package is required. `flexdll` is also necessary
+   for shared library support.
+ 
+-* Binutils including `ar`, `ranlib`, and `strip` are required if your
+-  distribution does not already provide them with the C compiler.
++* Binutils including `ar` and `strip` are required if your distribution
++  does not already provide them with the C compiler.
+ 
+ == Configuration
+ 
+diff --git a/Makefile b/Makefile
+index 3c74bc79df..0e92785da2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -585,8 +585,6 @@ endif
+ ifeq "$(INSTALL_OCAMLNAT)" "true"
+ 	  $(INSTALL_PROG) ocamlnat$(EXE) "$(INSTALL_BINDIR)"
+ endif
+-	cd "$(INSTALL_COMPLIBDIR)" && \
+-	   $(RANLIB) ocamlcommon.$(A) ocamlbytecomp.$(A) ocamloptcomp.$(A)
+ 
+ # Installation of the *.ml sources of compiler-libs
+ .PHONY: install-compiler-sources
+diff --git a/Makefile.build_config.in b/Makefile.build_config.in
+index eeac09dd76..4d6705d252 100644
+--- a/Makefile.build_config.in
++++ b/Makefile.build_config.in
+@@ -20,7 +20,7 @@
+ # $(ROOTDIR) has been defined.
+ 
+ include $(ROOTDIR)/Makefile.config
+-INSTALL ?= @INSTALL@
++INSTALL ?= @INSTALL@ -p
+ INSTALL_DATA ?= @INSTALL_DATA@
+ INSTALL_PROG ?= @INSTALL_PROGRAM@
+ 
+diff --git a/Makefile.config.in b/Makefile.config.in
+index eb3d85eb1d..4badb74c3f 100644
+--- a/Makefile.config.in
++++ b/Makefile.config.in
+@@ -88,10 +88,6 @@ LDFLAGS?=@LDFLAGS@
+ ### How to invoke the C preprocessor through the C compiler
+ CPP=@CPP@
+ 
+-### How to invoke ranlib
+-RANLIB=@RANLIB@
+-RANLIBCMD=@RANLIBCMD@
+-
+ ### How to invoke ar
+ ARCMD=@AR@
+ 
+diff --git a/configure b/configure
+index 8a2c007fd221bc897a255b4aa80c7f23710fcb10..73ce66bfa0a3de5e886a88c973b2db288b5e4d03 100755
+GIT binary patch
+delta 91
+zcmX?nP<ics<qdoN*n%AWd_0{t@9~pl+59Z%$Itc$K8!%j1jNih%(DG~59<!M=|*j=
+q!qe@iu=Y&nn98a>-EJyt==60{S#P(`nZ^plY(UJuea<uvbuR!x+b0D8
+
+delta 343
+zcmZ3xU-|Gs<qdoNHXremU=av%^z-p_a`tuMg0ME<4*L1C{gMwO5HkTWGZ3?EzvRQZ
+z%gt0-!L_2KC^5MtGcR2sGcPT_C^xYrGe1uuttdZNAty7bBtJh#y;vbRKQApay|f4{
+zIlXW-lc=kLwL(coYMz1>mx2P^N?Ror2wRCOHK#ZgE(H{K3{og6R<cG`tHd?E;VQet
+z^!bxndn_ROY*jQu{QZ3bf?VA+ixTsIE&!ULjHC%ee!AKeRs(K@#Jm&*h=%E5Q&>YK
+zU>4b?CTHZsIKV)ezG4dNJs|}(H3gMwh?TVpF)A8{?X6Q;ftU@5*|)b&<<Rf~05Vo_
+ARR910
+
+diff --git a/configure.ac b/configure.ac
+index 2f4ebf9b30..13d6d1a326 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -119,8 +119,6 @@ AC_SUBST([bootstrapping_flexdll])
+ AC_SUBST([long_shebang])
+ AC_SUBST([shebangscripts])
+ AC_SUBST([AR])
+-AC_SUBST([RANLIB])
+-AC_SUBST([RANLIBCMD])
+ AC_SUBST([mklib])
+ AC_SUBST([supports_shared_libraries])
+ AC_SUBST([natdynlink])
+@@ -474,32 +472,24 @@ AS_CASE([$enable_dependency_generation],
+       [compute_deps=true])],
+     [compute_deps=false])])
+ 
+-# Extracting information from libtool's configuration
+-AS_IF([test -n "$RANLIB" ],
+-  [RANLIBCMD="$RANLIB"],
+-  [RANLIB="$AR rs"; RANLIBCMD=""]
+-)
+-
+ AS_CASE([$host],
+   # In config/Makefile.mingw*, we had:
+   # TARGET=i686-w64-mingw32 and x86_64-w64-mingw32
+   # TOOLPREF=$(TARGET)-
+   # ARCMD=$(TOOLPREF)ar
+-  # RANLIB=$(TOOLPREF)ranlib
+-  # RANLIBCMD=$(TOOLPREF)ranlib
+-  # However autoconf and libtool seem to use ar and ranlib
++  # However autoconf and libtool seem to use ar
+   # So we let them do, at the moment
+   [*-pc-windows],
+     [
+       libext=lib
+-      AR=""; RANLIB=echo; RANLIBCMD=""
++      AR=""
+       AS_IF([test "$host_cpu" = "x86_64" ],
+         [machine="-machine:AMD64 "],
+         [machine=""])
+       mklib="link -lib -nologo $machine /out:\$(1) \$(2)"
+     ],
+   [
+-    mklib="rm -f \$(1) && ${AR} rc \$(1) \$(2) && ${RANLIB} \$(1)"
++    mklib="rm -f \$(1) && ${AR} rc \$(1) \$(2)"
+   ])
+ 
+ ## Find vendor of the C compiler
+diff --git a/otherlibs/Makefile.otherlibs.common b/otherlibs/Makefile.otherlibs.common
+index 95ff4d58fe..17c8e2dfd7 100644
+--- a/otherlibs/Makefile.otherlibs.common
++++ b/otherlibs/Makefile.otherlibs.common
+@@ -95,7 +95,6 @@ install::
+ 	fi
+ ifneq "$(STUBSLIB)" ""
+ 	$(INSTALL_DATA) $(STUBSLIB) "$(INSTALL_LIBDIR)/"
+-	cd "$(INSTALL_LIBDIR)"; $(RANLIB) lib$(CLIBNAME).$(A)
+ endif
+ 
+ 	$(INSTALL_DATA) \
+@@ -115,7 +114,6 @@ installopt:
+ 	$(INSTALL_DATA) \
+ 	   $(CAMLOBJS_NAT) $(LIBNAME).cmxa $(LIBNAME).$(A) \
+ 	   "$(INSTALL_LIBDIR)/"
+-	cd "$(INSTALL_LIBDIR)"; $(RANLIB) $(LIBNAME).a
+ 	if test -f $(LIBNAME).cmxs; then \
+ 	  $(INSTALL_PROG) $(LIBNAME).cmxs "$(INSTALL_LIBDIR)"; \
+ 	fi
+diff --git a/otherlibs/dynlink/Makefile b/otherlibs/dynlink/Makefile
+index 6b02dc1979..c21bf573da 100644
+--- a/otherlibs/dynlink/Makefile
++++ b/otherlibs/dynlink/Makefile
+@@ -249,12 +249,11 @@ ifeq "$(INSTALL_SOURCE_ARTIFACTS)" "true"
+ endif
+ 
+ installopt:
+-	if $(NATDYNLINK); then \
+-	  $(INSTALL_DATA) \
+-	    $(NATOBJS) dynlink.cmxa dynlink.$(A) \
+-	    "$(INSTALL_LIBDIR)" && \
+-	  cd "$(INSTALL_LIBDIR)" && $(RANLIB) dynlink.$(A); \
+-	fi
++ifeq "$(strip $(NATDYNLINK))" "true"
++	$(INSTALL_DATA) \
++	  $(NATOBJS) dynlink.cmxa dynlink.$(A) \
++	  "$(INSTALL_LIBDIR)"
++endif
+ 
+ partialclean:
+ 	rm -f $(extract_crc) *.cm[ioaxt] *.cmti *.cmxa \
+diff --git a/otherlibs/systhreads/Makefile b/otherlibs/systhreads/Makefile
+index 8fc1bdb926..640a7666a8 100644
+--- a/otherlibs/systhreads/Makefile
++++ b/otherlibs/systhreads/Makefile
+@@ -121,7 +121,6 @@ install:
+ 	  $(INSTALL_PROG) dllthreads$(EXT_DLL) "$(INSTALL_STUBLIBDIR)"; \
+ 	fi
+ 	$(INSTALL_DATA) libthreads.$(A) "$(INSTALL_LIBDIR)"
+-	cd "$(INSTALL_LIBDIR)"; $(RANLIB) libthreads.$(A)
+ 	mkdir -p "$(INSTALL_THREADSLIBDIR)"
+ 	$(INSTALL_DATA) \
+ 	  $(CMIFILES) threads.cma \
+@@ -136,11 +135,9 @@ endif
+ 
+ installopt:
+ 	$(INSTALL_DATA) libthreadsnat.$(A) "$(INSTALL_LIBDIR)"
+-	cd "$(INSTALL_LIBDIR)"; $(RANLIB) libthreadsnat.$(A)
+ 	$(INSTALL_DATA) \
+ 	  $(THREADS_NCOBJS) threads.cmxa threads.$(A) \
+ 	  "$(INSTALL_THREADSLIBDIR)"
+-	cd "$(INSTALL_THREADSLIBDIR)" && $(RANLIB) threads.$(A)
+ 
+ %.cmi: %.mli
+ 	$(CAMLC) -c $(COMPFLAGS) $<
+diff --git a/stdlib/Makefile b/stdlib/Makefile
+index df34bc2d49..f367956fbd 100644
+--- a/stdlib/Makefile
++++ b/stdlib/Makefile
+@@ -105,7 +105,6 @@ installopt-default::
+ 	$(INSTALL_DATA) \
+ 	  stdlib.cmxa stdlib.$(A) std_exit.$(O) *.cmx \
+ 	  "$(INSTALL_LIBDIR)"
+-	cd "$(INSTALL_LIBDIR)"; $(RANLIB) stdlib.$(A)
+ 
+ ifeq "$(UNIX_OR_WIN32)" "unix"
+ HEADERPROGRAM = header
+diff --git a/tools/ocamlmklib.ml b/tools/ocamlmklib.ml
+index 0ca7b80f3b..48f636bc10 100644
+--- a/tools/ocamlmklib.ml
++++ b/tools/ocamlmklib.ml
+@@ -25,10 +25,8 @@ let mklib out files opts =
+     then "-machine:AMD64 "
+     else ""
+   in
+-  Printf.sprintf "link -lib -nologo %s-out:%s %s %s"
+-                 machine out opts files
+-  else Printf.sprintf "%s rcs %s %s %s && %s %s"
+-                      Config.ar out opts files Config.ranlib out
++  Printf.sprintf "link -lib -nologo %s-out:%s %s %s" machine out opts files
++  else Printf.sprintf "%s rc %s %s %s" Config.ar out opts files
+ 
+ (* PR#4783: under Windows, don't use absolute paths because we do
+    not know where the binary distribution will be installed. *)
+diff --git a/utils/Makefile b/utils/Makefile
+index 7231fae28e..de923900f1 100644
+--- a/utils/Makefile
++++ b/utils/Makefile
+@@ -73,7 +73,6 @@ config.ml: config.mlp $(ROOTDIR)/Makefile.config Makefile
+ 	    $(call SUBST_STRING,OCAMLOPT_CPPFLAGS) \
+ 	    $(call SUBST_STRING,PACKLD) \
+ 	    $(call SUBST,PROFINFO_WIDTH) \
+-	    $(call SUBST_STRING,RANLIBCMD) \
+ 	    $(call SUBST_STRING,RPATH) \
+ 	    $(call SUBST_STRING,MKSHAREDLIBRPATH) \
+ 	    $(call SUBST,FORCE_SAFE_STRING) \
+diff --git a/utils/ccomp.ml b/utils/ccomp.ml
+index 955968d1cd..d23c3f2baa 100644
+--- a/utils/ccomp.ml
++++ b/utils/ccomp.ml
+@@ -140,12 +140,8 @@ let create_archive archive file_list =
+                                quoted_archive (quote_files file_list))
+     | _ ->
+         assert(String.length Config.ar > 0);
+-        let r1 =
+-          command(Printf.sprintf "%s rc %s %s"
+-                  Config.ar quoted_archive (quote_files file_list)) in
+-        if r1 <> 0 || String.length Config.ranlib = 0
+-        then r1
+-        else command(Config.ranlib ^ " " ^ quoted_archive)
++        command(Printf.sprintf "%s rc %s %s"
++                Config.ar quoted_archive (quote_files file_list))
+ 
+ let expand_libname cclibs =
+   cclibs |> List.map (fun cclib ->
+diff --git a/utils/config.mli b/utils/config.mli
+index 7f70a52d52..94dee3cb92 100644
+--- a/utils/config.mli
++++ b/utils/config.mli
+@@ -82,9 +82,6 @@ val mkexe: string
+ val mkmaindll: string
+ (** The linker command line to build main programs as dlls. *)
+ 
+-val ranlib: string
+-(** Command to randomize a library, or "" if not needed *)
+-
+ val default_rpath: string
+ (** Option to add a directory to be searched for libraries at runtime
+     (used by ocamlmklib) *)
+diff --git a/utils/config.mlp b/utils/config.mlp
+index 44c6ff8fa5..f758a9b483 100644
+--- a/utils/config.mlp
++++ b/utils/config.mlp
+@@ -54,7 +54,6 @@ let native_c_compiler =
+   c_compiler ^ " " ^ ocamlopt_cflags ^ " " ^ ocamlopt_cppflags
+ let native_c_libraries = "%%NATIVECCLIBS%%"
+ let native_pack_linker = "%%PACKLD%%"
+-let ranlib = "%%RANLIBCMD%%"
+ let default_rpath = "%%RPATH%%"
+ let mksharedlibrpath = "%%MKSHAREDLIBRPATH%%"
+ let ar = "%%ARCMD%%"
+@@ -177,7 +176,6 @@ let configuration_variables =
+   p "bytecomp_c_libraries" bytecomp_c_libraries;
+   p "native_c_libraries" native_c_libraries;
+   p "native_pack_linker" native_pack_linker;
+-  p "ranlib" ranlib;
+   p "architecture" architecture;
+   p "model" model;
+   p_int "int_size" Sys.int_size;
+-- 
+2.37.0.rc2
+

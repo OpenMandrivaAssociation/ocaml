@@ -1,0 +1,28 @@
+From d2b9da6f7aff410e8a1499637ae88aaf0a135c2f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Nicol=C3=A1s=20Ojeda=20B=C3=A4r?= <n.oje.bar@gmail.com>
+Date: Tue, 17 May 2022 14:45:26 +0200
+Subject: [PATCH 04/24] Changes
+
+(cherry picked from commit 9a157026f115364635f8fe0ae5805e15ef071de0)
+---
+ Changes | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Changes b/Changes
+index 931a74b8d1..fdfffd78bb 100644
+--- a/Changes
++++ b/Changes
+@@ -8,6 +8,10 @@ OCaml 4.14 maintenance branch
+   the class definition.
+   (Nicolás Ojeda Bär, review by Leo White)
+ 
++- #11263: caml/misc.h: check whether `_MSC_VER` is defined before using it. This
++  could break the build of the compiler on non-gcc non-clang Unix builds.
++  (Nicolás Ojeda Bär, review by Sebastien Hinderer)
++
+ OCaml 4.14.0 (28 March 2022)
+ ----------------------------
+ 
+-- 
+2.37.0.rc2
+

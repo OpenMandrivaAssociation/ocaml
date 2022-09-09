@@ -1,0 +1,93 @@
+From 513164232d897c39c4e571a7a8f167dee5c146b3 Mon Sep 17 00:00:00 2001
+From: David Allsopp <david.allsopp@metastack.com>
+Date: Wed, 18 May 2022 12:48:33 +0100
+Subject: [PATCH 05/24] Guard more instances of undefined _MSC_VER
+
+---
+ Changes               |  8 +++++---
+ runtime/caml/memory.h |  2 +-
+ runtime/caml/misc.h   | 12 +++++++-----
+ 3 files changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/Changes b/Changes
+index fdfffd78bb..590268262d 100644
+--- a/Changes
++++ b/Changes
+@@ -8,9 +8,11 @@ OCaml 4.14 maintenance branch
+   the class definition.
+   (Nicolás Ojeda Bär, review by Leo White)
+ 
+-- #11263: caml/misc.h: check whether `_MSC_VER` is defined before using it. This
+-  could break the build of the compiler on non-gcc non-clang Unix builds.
+-  (Nicolás Ojeda Bär, review by Sebastien Hinderer)
++- #11263, #11267: caml/{memory,misc}.h: check whether `_MSC_VER` is defined
++  before using it to ensure that the headers can always be used in code which
++  turns on -Wundef (or equivalent).
++  (David Allsopp and Nicolás Ojeda Bär, review by Nicolás Ojeda Bär and
++   Sebastien Hinderer)
+ 
+ OCaml 4.14.0 (28 March 2022)
+ ----------------------------
+diff --git a/runtime/caml/memory.h b/runtime/caml/memory.h
+index 1e9cdf6d9b..d9e58bc2d0 100644
+--- a/runtime/caml/memory.h
++++ b/runtime/caml/memory.h
+@@ -329,7 +329,7 @@ struct caml__roots_block {
+   #define CAMLunused_start __attribute__ ((unused))
+   #define CAMLunused_end
+   #define CAMLunused __attribute__ ((unused))
+-#elif _MSC_VER >= 1500
++#elif defined(_MSC_VER) && _MSC_VER >= 1500
+   #define CAMLunused_start  __pragma( warning (push) )           \
+     __pragma( warning (disable:4189 ) )
+   #define CAMLunused_end __pragma( warning (pop))
+diff --git a/runtime/caml/misc.h b/runtime/caml/misc.h
+index 494d45e8f8..c605f8711e 100644
+--- a/runtime/caml/misc.h
++++ b/runtime/caml/misc.h
+@@ -43,7 +43,8 @@
+   #define CAMLdeprecated_typedef(name, type) typedef type name
+ #endif
+ 
+-#if defined(__GNUC__) && __STDC_VERSION__ >= 199901L || _MSC_VER >= 1925
++#if defined(__GNUC__) && __STDC_VERSION__ >= 199901L \
++ || defined(_MSC_VER) && _MSC_VER >= 1925
+ 
+ #define CAML_STRINGIFY(x) #x
+ #ifdef _MSC_VER
+@@ -90,7 +91,7 @@ CAMLdeprecated_typedef(addr, char *);
+   #define CAMLnoreturn_start
+   #define CAMLnoreturn_end __attribute__ ((noreturn))
+   #define Noreturn __attribute__ ((noreturn))
+-#elif _MSC_VER >= 1500
++#elif defined(_MSC_VER) && _MSC_VER >= 1500
+   #define CAMLnoreturn_start __declspec(noreturn)
+   #define CAMLnoreturn_end
+   #define Noreturn
+@@ -138,11 +139,12 @@ CAMLdeprecated_typedef(addr, char *);
+ /* we need to be able to compute the exact offset of each member. */
+ #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+ #define CAMLalign(n) _Alignas(n)
+-#elif defined(__cplusplus) && (__cplusplus >= 201103L || _MSC_VER >= 1900)
++#elif defined(__cplusplus) \
++   && (__cplusplus >= 201103L || defined(_MSC_VER) && _MSC_VER >= 1900)
+ #define CAMLalign(n) alignas(n)
+ #elif defined(SUPPORTS_ALIGNED_ATTRIBUTE)
+ #define CAMLalign(n) __attribute__((aligned(n)))
+-#elif _MSC_VER >= 1500
++#elif defined(_MSC_VER) && _MSC_VER >= 1500
+ #define CAMLalign(n) __declspec(align(n))
+ #else
+ #error "How do I align values on this platform?"
+@@ -170,7 +172,7 @@ CAMLdeprecated_typedef(addr, char *);
+   #define CAMLunused_start __attribute__ ((unused))
+   #define CAMLunused_end
+   #define CAMLunused __attribute__ ((unused))
+-#elif _MSC_VER >= 1500
++#elif defined(_MSC_VER) && _MSC_VER >= 1500
+   #define CAMLunused_start  __pragma( warning (push) )           \
+     __pragma( warning (disable:4189 ) )
+   #define CAMLunused_end __pragma( warning (pop))
+-- 
+2.37.0.rc2
+
