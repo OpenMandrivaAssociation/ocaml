@@ -77,6 +77,7 @@ Requires:	%{name}-compiler-libs = %{EVRD}
 
 # Patches contain binary diffs and need to be applied with "git apply"
 %define __scm git
+BuildRequires:	git-core
 
 %description
 OCaml is a high-level, strongly-typed, functional and object-oriented
