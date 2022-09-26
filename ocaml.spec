@@ -2,8 +2,8 @@
 %define _disable_lto 1
 %define build_ocamlopt 1
 %define build_labltk 1
-%define major 4.14
-%define minor 0
+%define major %(echo %{version}|cut -d. -f1-2)
+%define minor %(echo %{version}|cut -d. -f3-)
 
 # -fomit-frame-pointer and -pg are mutually exclusive (and ocaml adds the latter)
 %global optflags %(echo %{optflags} |sed -e 's,-fomit-frame-pointer,,g') -fcommon
@@ -12,8 +12,8 @@
 
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
-Version:	%{major}.%{minor}
-Release:	2
+Version:	4.14.0
+Release:	1
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://ocaml.org/
