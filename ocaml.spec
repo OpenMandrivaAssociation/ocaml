@@ -12,7 +12,7 @@
 
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
-Version:	4.14.0
+Version:	5.0.0
 Release:	1
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
@@ -23,35 +23,9 @@ Source3:	ocaml.rpmlintrc
 Source4:	https://src.fedoraproject.org/rpms/ocaml-srpm-macros/raw/master/f/macros.ocaml-srpm
 
 # fedora
-Patch1000:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0001-Do-not-trigger-warning-when-calling-virtual-methods-.patch
-Patch1001:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0002-Merge-pull-request-11236-from-Nymphium-missing-since.patch
-Patch1002:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0003-misc.h-fix-preprocessor-conditional-on-_MSC_VER.patch
-Patch1003:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0004-Changes.patch
-Patch1004:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0005-Guard-more-instances-of-undefined-_MSC_VER.patch
-Patch1005:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0006-Better-documentation-for-string_of_float-.-11353.patch
-Patch1006:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0007-Merge-pull-request-11380-from-damiendoligez-fix-fort.patch
-Patch1007:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0008-Refactor-the-initialization-of-bytecode-threading-11.patch
-Patch1008:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0009-Merge-pull-request-11397-from-Octachron-tast_mapper_.patch
-Patch1009:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0010-Merge-pull-request-11396-from-gasche-fix11392.patch
-Patch1010:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0011-Document-limitation-on-caml_callbackN-11409.patch
-Patch1011:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0012-Stop-calling-ranlib-on-created-installed-libraries-1.patch
-Patch1012:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0013-tests-lib-bigarray-2-has-gfortran.sh-don-t-print-any.patch
-Patch1013:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0014-Merge-pull-request-11417-from-lpw25-fix-virtual-clas.patch
-Patch1014:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0015-Do-not-elide-the-whole-module-type-error-message-114.patch
-Patch1015:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0016-Merge-pull-request-11373-from-dra27-flexlink-detect.patch
-Patch1016:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0017-Merge-pull-request-11468-from-dra27-i686-mingw-ipv6.patch
-Patch1017:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0018-More-prudent-deallocation-of-alternate-signal-stack-.patch
-Patch1018:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0019-Merge-pull-request-11487-from-purplearmadillo77-fma_.patch
-Patch1019:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0020-Fixup-Changes.patch
-Patch1020:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0021-Fix-deprecated_mutable-which-couldn-t-be-triggered.-.patch
-Patch1021:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0022-Don-t-add-rpaths-to-libraries.patch
-Patch1022:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0023-configure-Allow-user-defined-C-compiler-flags.patch
-Patch1023:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/0024-configure-Only-use-OC_-for-building-executables.patch
 
 # OMV
 Patch2000:	ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
-Patch2001:	ocaml-4.07.0-lto.patch
-Patch2002:	ocaml-4.02.1-respect-cflags-ldflags.patch
 
 # Additional RISC-V patches from https://github.com/nojb/riscv-ocaml
 # (currently none)
