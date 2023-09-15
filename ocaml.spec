@@ -12,8 +12,8 @@
 
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
-Version:	5.0.0
-Release:	3
+Version:	5.1.0
+Release:	1
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		http://ocaml.org/

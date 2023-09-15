@@ -1,3 +1,4 @@
 sources:
-  ocaml-5.0.0.tar.xz: 2153c2b4f964f93490a6cd62df9c5694b972aee3
   ocaml-5.0-refman-html.tar.gz: 4a9d8fb98b677f4689d38b50e0bb584aaf980343
+  ocaml-5.1-refman-html.tar.gz: 82cb29d97e4c937ad08a82825e07fbf0c97d6403
+  ocaml-5.1.0.tar.xz: a6884413743b2ded74df381c86969ff40ae0d982
