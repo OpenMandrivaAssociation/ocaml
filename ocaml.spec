@@ -16,7 +16,7 @@ Version:	5.2.0
 Release:	2
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
-Url:		http://ocaml.org/
+Url:		https://ocaml.org/
 Source0:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{version}.tar.xz
 Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman-html.tar.gz
 Source3:	ocaml.rpmlintrc
