@@ -13,7 +13,7 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	5.2.1
-Release:	1
+Release:	2
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		https://ocaml.org/
@@ -222,6 +222,7 @@ EOF
 
 %files compiler-libs
 %dir %{_libdir}/ocaml/compiler-libs
+%{_libdir}/ocaml/compiler-libs/META
 %{_libdir}/ocaml/compiler-libs/*.cmi
 %{_libdir}/ocaml/compiler-libs/*.cmo
 %{_libdir}/ocaml/compiler-libs/*.cma
