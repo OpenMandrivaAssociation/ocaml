@@ -13,16 +13,18 @@
 Summary:	The Objective Caml compiler and programming environment
 Name:		ocaml
 Version:	5.2.1
-Release:	2
+Release:	3
 License:	QPL with exceptions and LGPLv2 with exceptions
 Group:		Development/Other
 Url:		https://ocaml.org/
 Source0:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{version}.tar.xz
 Source1:	http://caml.inria.fr/pub/distrib/ocaml-%{major}/%{name}-%{major}-refman-html.tar.gz
 Source3:	ocaml.rpmlintrc
-Source4:	https://src.fedoraproject.org/rpms/ocaml-srpm-macros/raw/master/f/macros.ocaml-srpm
 
 # fedora
+Source4:	https://src.fedoraproject.org/rpms/ocaml-srpm-macros/raw/master/f/macros.ocaml-srpm
+Source5:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/macros.ocaml-rpm
+Source6:	https://src.fedoraproject.org/rpms/ocaml/raw/rawhide/f/ocaml_files.py
 
 # OMV
 Patch2000:	ocaml-3.04-larger-buffer-for-uncaught-exception-messages.patch
@@ -195,10 +197,13 @@ find %{buildroot} -name "*.ml" |xargs chmod 0644
 # We copy the Fedora macros file for compatibility, but then we add our own
 # (more useful) set of macros...
 install -D -m 644 %{S:4} %{buildroot}%{_prefix}/lib/rpm/macros.d/macros.ocaml
+cat %{S:5} >>%{buildroot}%{_prefix}/lib/rpm/macros.d/macros.ocaml
 cat >>%{buildroot}%{_prefix}/lib/rpm/macros.d/macros.ocaml <<EOF
 
 %%ocaml_sitelib %%(if [ -x /usr/bin/ocamlc ]; then ocamlc -where;fi)/site-lib
 EOF
+mkdir -p %{buildroot}%{_prefix}/lib/rpm
+install -c -m 755 %{S:6} %{buildroot}%{_prefix}/lib/rpm/
 
 %files
 
@@ -209,6 +214,7 @@ EOF
 %{_datadir}/applications/*
 %exclude %{_libdir}/ocaml/compiler-libs
 %{_prefix}/lib/rpm/macros.d/macros.ocaml
+%{_prefix}/lib/rpm/ocaml_files.py
 
 %files doc
 %doc %{_docdir}/ocaml/Changes
@@ -221,17 +227,4 @@ EOF
 %{_prefix}/src/%{name}
 
 %files compiler-libs
-%dir %{_libdir}/ocaml/compiler-libs
-%{_libdir}/ocaml/compiler-libs/META
-%{_libdir}/ocaml/compiler-libs/*.cmi
-%{_libdir}/ocaml/compiler-libs/*.cmo
-%{_libdir}/ocaml/compiler-libs/*.cma
-%{_libdir}/ocaml/compiler-libs/*.cmt
-%{_libdir}/ocaml/compiler-libs/*.cmti
-%{_libdir}/ocaml/compiler-libs/*.mli
-%if %{build_ocamlopt}
-%{_libdir}/ocaml/compiler-libs/*.a
-%{_libdir}/ocaml/compiler-libs/*.cmxa
-/%{_libdir}/ocaml/compiler-libs/*.cmx
-%{_libdir}/ocaml/compiler-libs/*.o
-%endif
+%{_libdir}/ocaml/compiler-libs
